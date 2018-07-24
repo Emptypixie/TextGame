@@ -1,44 +1,206 @@
-function combat(){
+/**
+ * fight according to style
+ * @param {number} num use static variables like ATTACK, DEFNSE
+ */
+function fight(num){
     var m = Map[player.x][player.y].monster;
-    
-    drawmp(player);
-    drawlife(player);
-    addlineafter();
-    for(let i = 0; i < m.length; i++){
+    var i = getRand(0, m.length - 1);
+    var opponent = m[i];
+
+    damageFunc(player, opponent);
+
+    if(opponent.hpnow <= 0){//check if opponent hp is 0
+        adddiv("You defeated " + opponent.name + ".");
         
-        drawmp(m[i]);
-        drawlife(m[i]);
+        var index = m.indexOf(opponent);//delete monster from current room
+        m.splice(index, 1);
+    }
+
+    if(m.length == 0){//check if there are monsters in currnent room
+        removeCombat();
+        game_state = PLAY_NON_COMBAT;
+    } else {
+        for(let i = 0; i < m.length; i++){
+            damageFunc(m[i], player);
+            if(player.hpnow <= 0){//player dead!
+                
+            }
+        }
+    }
+}
+
+/**
+ * 
+ * @param {Creature} c_att attacking creature
+ * @param {Creature} c_def defending creature
+ */
+function damageFunc(c_att, c_def){
+    var dmg = damageCalc(c_att, c_def);//damage player deals to opponent
+    c_def.hpnow -= dmg;
+    addDamageLog(c_def, dmg);
+    redrawlife(c_def, dmg);
+    redrawmp(c_def);
+}
+
+/**
+ * Calculates damage the offending creature deals to defending creature.
+ * @param {Creature} c_att The attacking Creature
+ * @param {Creature} c_def the deffending Creature
+ */
+function damageCalc(c_att, c_def){
+    var dmg = c_att.Attack * 10 + c_att.level;
+    var reduc = c_def.Defense * 5 + c_def.level;
+    dmg -= reduc;
+    return dmg;
+}
+
+function drawCombat(){
+    var m = Map[player.x][player.y].monster;
+    if(m.length != 0){
+        
+        for(let i = 0; i < m.length; i++){
+            draw_name_hp_mp(m[i]);
+        }
+        addlineafter();
+        draw_name_hp_mp(player);        
+    } else {
+        adddiv("There is no monster to fight...");
+        game_state = PLAY_NON_COMBAT;
     }
     
 }
 
-function drawlife(creature){
-    str = creature.name + " HP: ";
-
-    for(let i = 0; i < creature.maxhp; i++){
-        str += "|";
-    }
-    var ele = $('<div>').css("text-align", "center").insertAfter("#placeholder");
-    ele.attr("id", creature.id + "hp");
-    var speed = 20/str;
-    typeWriter(ele, str, 0, speed);
-
+function draw_name_hp_mp(creature){
+    var ele = $('<div>').css({"text-align": "center"});
+    ele.attr("id",creature.id);
+    $("#combat_area").append(ele);
+    drawname(creature);
+    drawnewlife(creature);
+    drawnewmp(creature);
 }
 
-function drawmp(creature){
-    str = creature.name + " MP: ";
+/**
+ * Redraws the hp bar of creature.
+ * @param {Creature} creature 
+ */
+function redrawlife(creature, dmg){
+    var id = "#" + creature.id + "hp";
+    var ele = $(id);
+    //ele.text(numtoline(creature.hpnow));
+    typeWriterDel(ele, dmg);
+}
 
-    for(let i = 0; i < creature.maxhp; i++){
-        str += "|";
-    }
-    var ele = $('<div>').css("text-align", "center").insertAfter("#placeholder");
+/**
+ * Redraws the mp bar of crearture.
+ * @param {Creature} creature 
+ */
+function redrawmp(creature){
+    var id = "#" + creature.id + "mp";
+    var ele = $(id);
+    ele.text(numtoline(creature.mpnow));
+}
+
+/**
+ * Draws new HP bar in combat_area.
+ * @param {Creature} creature 
+ */
+function drawnewlife(creature){
+    str = numtoline(creature.hpnow);
+    var ele = $('<div>').css({"text-align": "center", "color": "red"});
+    ele.attr("id", creature.id + "hp");
+    $("#combat_area").append(ele);
+    typeWriter(ele, str, 0);
+}
+
+/**
+ * Draws new MP bar in combat_area.
+ * @param {Creature} creature 
+ */
+function drawnewmp(creature){
+    str = numtoline(creature.mpnow);
+    var ele = $('<div>').css({"text-align": "center", "color": "blue"});
     ele.attr("id", creature.id + "mp");
-    var speed = 20/str;
-    typeWriter(ele, str, 0, speed);
+    $("#combat_area").append(ele);
+    typeWriter(ele, str, 0);
+}
+
+/**
+ * Draws creature name in combat_area
+ * @param {Creature} creature 
+ */
+function drawname(creature){
+    str = creature.name;
+    var ele = $('<div>').css("text-align", "center");
+    ele.attr("id", creature.id + "name");
+    $("#combat_area").append(ele);
+    typeWriter(ele, str, 0);
 }
 
 function addlineafter(){
-    var ele = $('<p>').css("text-align", "center").insertAfter("#placeholder");
+    var ele = $('<p>').css("text-align", "center");
     ele.text("----------------  vs  ----------------");
     ele.attr("id", "vs");
+    $("#combat_area").append(ele);
+}
+
+/**
+ * Return '|' as string.
+ * ex) num = 5, returns "|||||"
+ * @param {number} num 
+ */
+function numtoline(num){
+    var str = "";
+    for(let i = 0; i < num; i++){
+        str += "|";
+    }
+    return str;
+}
+
+/**
+ * Remove combat drawings (HP, MP bars, etc)
+ * empty id = combat_area
+ */
+function removeCombat(){
+    ch1 = $("#combat_area > div"); //array of div with creature id
+    for(let i = 0; i < ch1.length; i++){
+            var ele = $("#" + ch1[i].id);
+            removeElement(ele, ele.text().length);
+    }
+    removeElement($("#vs"), $("#vs").text().length);
+    
+    //$("#combat_area").empty();
+}
+
+/**
+ * Deletes text of html element in typewriter style,
+ * then remove the element
+ * @param {} ele a jquery element
+ * @param {number} i should be ele.text().length
+ */
+function removeElement(ele, i){
+    var interval = TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
+    var str = ele.text();
+    str = str.substring(0, str.length - 1);
+    if(i > 0){
+        ele.text(str);
+        i -= 1;
+        window.setTimeout(removeElement, interval, ele, i);
+    } else {
+        var ar = ele.siblings();
+        if(ar.length != 0){
+            console.log("siblings left");
+            ele.remove();
+        } else {
+            ele.parent().empty();
+        }
+    }    
+}
+
+/**
+ * Adds a damage log
+ * @param {Creature} creature creature that recieved damage
+ * @param {number} dmg damge dealt
+ */
+function addDamageLog(creature, dmg){
+    adddiv(creature.name + ": " + "-" + dmg + " HP");
 }

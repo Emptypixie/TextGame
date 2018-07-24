@@ -1,15 +1,7 @@
 // Write JavaScript here 
 
 /**
- * List that contains all children of ObjList.
- */
-var ObjList = [];
-
-/**List of all monsters' name. */
-var MonsterList = [];
-
-/**
- * Counter of ObjList length.
+ * Counter of ObjParent. Used for ids
  */
 var count = 0;
 
@@ -17,6 +9,14 @@ var count = 0;
  * Size of Map to generate. width = height = map size.
  */
 var Map_Size = 5;
+var ATTACK = 0;
+var DEFENSE = 1;
+var EVADE = 2;
+var RUNAWAY = 3;
+
+var TYPINGSPEED = 30;
+var TYPEMINRAN = 5;
+var TYPEMAXRAN = 10;
 
 /**
  * Object to store rooms.s
@@ -32,7 +32,6 @@ class ObjParent{
      * @param {String} name The name of the object.
      */
     constructor(name){
-        ObjList.push(this);
         /**Object name. */
         this.name = name;
         /**Object id */
@@ -155,8 +154,8 @@ class Creature extends ObjParent{
         this.level = l;
         /**Attack level */
         this.Attack = l;
-        /**Deffence level */
-        this.Deffence = l;
+        /**Defense level */
+        this.Defense = l;
         /**Magic level */
         this.Magic = l;
         /**Magic def */
@@ -174,6 +173,8 @@ class Creature extends ObjParent{
         /**Max hp */
         this.maxhp = this.HP * 10;
         this.maxmp = this.MP * 10;
+        this.hpnow = this.maxhp;
+        this.mpnow = this.maxmp;
     }
 
     /**adjust monster level to set level */
@@ -201,14 +202,7 @@ class Monster extends Creature{
         this.setlevel(level);
         this.setxp();
         var found = 0;
-        for(let i = 0; i < MonsterList.length; i++){
-            if(MonsterList[i] == this.name){
-                found = 1;
-            }
-        }
-        if(found == 0){
-            MonsterList.push(this.name);
-        }
+        
     }
 
     /**set min and max level of monster */
@@ -266,7 +260,7 @@ class Player extends Creature{
     init(){
         this.level = 1;
         this.Attack = 1;
-        this.Deffence = 1;
+        this.Defense = 1;
         this.Magic = 1;
         this.MagicDef = 1;
         this.Speed = 1;
@@ -276,6 +270,8 @@ class Player extends Creature{
         this.Resistance = 1;
         this.maxhp = this.HP * 10;
         this.maxmp = this.MP * 10;
+        this.hpnow = this.maxhp;
+        this.mpnow = this.maxmp;
     }
 
     /**Overrides Creature setlevel */
@@ -313,7 +309,6 @@ $(document).ready(function(){
  * Sets up the title screen.
  */
 function setwelcomepage(){
-    ObjList = [];
     adddiv('####################################');
     adddiv('Welcome to Text RPG');
     adddiv('- Play -');
@@ -327,10 +322,11 @@ function setwelcomepage(){
  * Called when input was made.
  */
 function submit(){
-    if($("#command_line").val().toString().toLowerCase() != ''){
+    var input = getinput();
+    if(input.toLowerCase() != ''){
         adddiv(">> " + $("#command_line").val().toString());
         if(game_state === STARTPAGE){
-            var input = $("#command_line").val().toString().toLowerCase();
+            input.toLowerCase();
             if(input === "help"){
                 adddiv('help');
             } else if(input === "play"){
@@ -340,13 +336,12 @@ function submit(){
                 adddiv('Options');
             }
         } else if(game_state === SETUP){
-            var input = $("#command_line").val().toString();
             setupplayer(input);
             adddiv('Hello ' + player.name +'! Welcome to the World of Text RPG!\nType in commands to play through.');
             generatemap();
             game_state = PLAY_NON_COMBAT;
         } else if(game_state === PLAY_NON_COMBAT){
-            var input = $("#command_line").val().toString().toLowerCase();
+            input.toLowerCase();
             if(input === "map"){
                 showmap();
             } else if(input === "exit" || input === "quit"){
@@ -360,12 +355,8 @@ function submit(){
                 }
             } else if(startWith(input, "fight")){
                 var str = input.substring("fight ".length);
-                if(str.length > 0){
-                    //game_state = COMBAT;
-                    combat();
-                } else {
-                    adddiv("Define what you want to fight.");
-                }
+                game_state = COMBAT;
+                drawCombat();
             } else if(input === "room"){
                 let m = Map[player.x][player.y].monster;
                 var names = "";
@@ -375,13 +366,29 @@ function submit(){
                 addp(names);
             }
         } else if(game_state === COMBAT){
-            adddiv("combat stuff");
+            input.toLowerCase();
+            if(input === "attack" || input === "a"){
+                fight(ATTACK);
+            } else if(input === "defend" || input === "d"){
+                fight(DEFENSE);
+            } else if(input === "evade" || input === "e"){
+                fight(EVADE);
+            } else if(input === "run away" || input === "r"){
+                fight(RUNAWAY);
+            }
         }
-        
-        $('#command_line').val("");
-        addline();
-        window.scrollTo(0, document.body.scrollHeight);
+        aftersubmit();
     }
+}
+
+function aftersubmit(){
+    $('#command_line').val("");
+    addline();
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
+function getinput(){
+    return $("#command_line").val().toString();
 }
 
 /**
@@ -401,8 +408,7 @@ function adddiv_inst(str){
 function adddiv(str){//$('<div>', { text:str}).css("text-align", "center").insertBefore("#placeholder").fadeIn(1000);
     var ele = $('<div>');
     ele.css("text-align", "center").insertBefore("#placeholder");
-    var speed = 20 / str.length;
-    typeWriter(ele, str, 0, speed);
+    typeWriter(ele, str, 0);
 }
 
 /**
@@ -414,8 +420,7 @@ function adddiv(str){//$('<div>', { text:str}).css("text-align", "center").inser
 function adddiv_c(str, color){//$('<div>', { text:str}).css("text-align", "center").insertBefore("#placeholder").fadeIn(1000);
     var ele = $('<div>');
     ele.css({'text-align': 'center', 'color': color}).insertBefore("#placeholder");
-    var speed = 20 / str.length;
-    typeWriter(ele, str, 0, speed);
+    typeWriter(ele, str, 0);
 }
 
 
@@ -428,23 +433,37 @@ function addp(str){//$('<div>', { text:str}).css("text-align", "center").insertB
     var ele = $('<p>');
     ele.css("text-align", "center").insertBefore("#placeholder");
     $('</p>').insertBefore("#placeholder");
-    var speed = 20 / str.length;
-    typeWriter(ele, str, 0, speed);
+    typeWriter(ele, str, 0);
 }
 
 /**
  * Add a typing effect to a HTML element's text.
- * @param {HTMLElement} ele 
+ * @param {HTMLElement} ele HTML element.
  * @param {String} str String to type into HTML element.
  * @param {number} i Should be 0 at first.
- * @param {number} speed Speed of typing. ex) 20 / str
  */
-function typeWriter(ele, str, i, speed){
-    var interval =  speed + getRand(5, 10);
+function typeWriter(ele, str, i){
+    var interval =  TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
     if(i < str.length){
         ele.text(ele.text() + str.charAt(i));
         i++;
-        window.setTimeout(typeWriter, interval, ele, str, i, speed);
+        window.setTimeout(typeWriter, interval, ele, str, i);
+    }
+}
+
+/**
+ * Delete letters from a HTML element's text
+ * @param {HTMLElement} ele HTML element
+ * @param {number} i number of letters to delete
+ */
+function typeWriterDel(ele, i){
+    var interval = TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
+    var str = ele.text();
+    str = str.substring(0, str.length - 1);
+    if(i > 0){
+        ele.text(str);
+        i -= 1;
+        window.setTimeout(typeWriterDel, interval, ele, i);
     }
 }
 
@@ -482,16 +501,17 @@ function exa(name){ //examine
 }
 
 /**
- * Looks for a ObjParent child in ObjList. Returns ObjParent child.
+ * Looks for a ObjParent child. Returns ObjParent child.
  * @param {String} name name of the object to look for.
  * @returns {ObjParent} ObjParent
  */
 function lookforobj(name){
     var i = 0;
-    for(i = 0; i < ObjList.length; i++){
-        var obj = ObjList[i];
-        if(obj.name.toLowerCase() === name.toLowerCase()){
-            return obj;
+    var m = Map[player.x][player.y].monster;
+    for(i = 0; i < m.length; i++){
+        var monster = m[i];
+        if(monster.name.toLowerCase() === name.toLowerCase()){
+            return monster;
         }
     }
     return undefined;
@@ -545,7 +565,8 @@ function generatemap(){
     Map = new Array(Map_Size);
     for(let y = 0; y < Map_Size; y++){
         Map[y] = new Array(Map_Size).fill(0);
-    }
+    } //initiation of array
+
     var i = 0;
     var j = i;
     for(i = 0; i < Map_Size; i++){

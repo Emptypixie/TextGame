@@ -5,6 +5,9 @@
  */
 var ObjList = [];
 
+/**List of all monsters' name. */
+var MonsterList = [];
+
 /**
  * Counter of ObjList length.
  */
@@ -14,6 +17,11 @@ var count = 0;
  * Size of Map to generate. width = height = map size.
  */
 var Map_Size = 5;
+
+/**
+ * Object to store rooms.s
+ */
+var Map;
 
 /**
  * All object's Parent
@@ -58,8 +66,77 @@ class ObjParent{
  * Room Class
  */
 class Room extends ObjParent{
+    /**sets room level according to room location */
+    setlevel(){
+        var midx = Math.floor(Map_Size / 2);
+        var midy = midx;
+        var dist = Room.getdistance(midx, midy, this.x, this.y);
+        /**Room level */
+        this.level = Math.ceil(dist) + 1;
+    }
 
-}
+    setNPC(){
+
+    }
+
+    setMonster(){
+        /**monsters in room */
+        this.monster = [];
+        var ran = getRand(0,this.level);
+        var m;
+        if(this.level < 5){
+            if(ran < this.level / 2){
+                m = new Goblin('Goblin');
+            } else {
+                m = new Zombie('Zombie');
+            }
+        }
+        m.x = this.x;
+        m.y = this.y;
+        m.setup(this.level);
+        this.monster.push(m);
+    }
+
+    /**
+     * Sets up room. Should call this first.
+     * @param {boolean} safety If the room is safe or not. 
+     * @param {number} x x pos of room
+     * @param {number} y y pos of room
+     */
+    setupRoom(safety, x, y){
+        this.setlocation(x, y);
+        this.safe = safety;
+        this.setlevel();
+        if(!this.safe){
+            this.setMonster();
+        } else {
+            this.setNPC();
+        }
+
+    }
+
+
+    /**
+     * Returns the distance between two points.
+     * @param {number} x1 
+     * @param {number} y1 
+     * @param {number} x2 
+     * @param {number} y2 
+     */
+    static getdistance(x1, y1, x2, y2){
+        var a = x1 - x2;
+        var b = y1 - y2;
+        var c = Math.sqrt(a*a + b*b);
+        return c;
+    }
+};
+
+/**
+ * All Item parent
+ */
+class Item extends ObjParent{
+
+};
 
 /**
  * All creature's parent
@@ -68,48 +145,144 @@ class Creature extends ObjParent{
 
     /**
      * Set Creature's stat levels 
-     * Stat should have attack, def, magic, range, hp, mp, prayer, summoning
+     * Stat should have attack, def, magic, magic def,
+     *  speed, hp, mp, Prayer, resistance
      * @param {number} level Creature's level
     */
     setlevel(level){
+        var l = this.adjustlevel(level);
+        /**the creature's level */
+        this.level = l;
         /**Attack level */
-        this.Attack = level;
+        this.Attack = l;
         /**Deffence level */
-        this.Deffence = level;
+        this.Deffence = l;
         /**Magic level */
-        this.Magic = level;
-        /**Range level */
-        this.Range = level;
+        this.Magic = l;
+        /**Magic def */
+        this.MagicDef = l;
+        /**Speed level */
+        this.Speed = l;
         /**HP level */
-        this.HP = level * 10;
+        this.HP = l;
         /**MP level */
-        this.MP = level * 5;
+        this.MP = l;
         /**Prayer level */
-        this.prayer = level;
-        /**Summoning level */
-        this.summoning = level;
+        this.Prayer = l;
+        /**Resistance level */
+        this.Resistance = l;
+        /**Max hp */
+        this.maxhp = this.HP * 10;
+        this.maxmp = this.MP * 10;
+    }
+
+    /**adjust monster level to set level */
+    adjustlevel(level){
+        var l = level;
+        if(l < this.minlevel){
+            return this.minlevel;
+        }
+        if(l > this.maxlevel){
+            return this.maxlevel;
+        }
+        return l;
     }
 };
 
 /**All monster's parent */
 class Monster extends Creature{
-    get xp(){
-        return this.xp;
+    /**
+     * Call this first...
+     * This sets name, leve, xp
+     * @param {number} level level of monster.
+     */
+    setup(level){
+        this.setmaxminlv();
+        this.setlevel(level);
+        this.setxp();
+        var found = 0;
+        for(let i = 0; i < MonsterList.length; i++){
+            if(MonsterList[i] == this.name){
+                found = 1;
+            }
+        }
+        if(found == 0){
+            MonsterList.push(this.name);
+        }
     }
-    set xp(xp){
-        this.xp = xp;
+
+    /**set min and max level of monster */
+    setmaxminlv(){
+        throw new Error('set max min level!' + this.name);
+    }
+
+    /**sets xp of monster. Make sure to do setlevel first */
+    setxp(){
+        var best_att = this.Attack;
+        if(best_att < this.Magic){
+            best_att = this.Magic;
+        }
+        var best_def = this.Deffence;
+        if(best_def < this.MagicDef){
+            best_def = this.MagicDef;
+        }
+        /**xp gained for defeating monster */
+        this.xp = best_att + best_def + this.HP + this.level;
     }
 };
 
 class Goblin extends Monster{
+    setmaxminlv(){
+        this.maxlevel = 10;
+        this.minlevel = 1;
+    }
+
     examine(){
         return "goblin...";
     }
 };
 
+class Zombie extends Monster{
+    setmaxminlv(){
+        this.maxlevel = 10;
+        this.minlevel = 1;
+    }
+
+    examine(){
+        return "Zombie...";
+    }
+};
+
 /**The Player class */
 class Player extends Creature{
+    /**
+     * 
+     * @param {Item} obj object to add into inv
+     */
+    addinv(obj){
+        this.inv.push(obj);
+    }
     
+    init(){
+        this.level = 1;
+        this.Attack = 1;
+        this.Deffence = 1;
+        this.Magic = 1;
+        this.MagicDef = 1;
+        this.Speed = 1;
+        this.HP = 1;
+        this.MP = 1;
+        this.Prayer = 1;
+        this.Resistance = 1;
+        this.maxhp = this.HP * 10;
+        this.maxmp = this.MP * 10;
+    }
+
+    /**Overrides Creature setlevel */
+    setlevel(level){
+        this.level = level;
+    }
+
 };
 
 
@@ -140,6 +313,7 @@ $(document).ready(function(){
  * Sets up the title screen.
  */
 function setwelcomepage(){
+    ObjList = [];
     adddiv('####################################');
     adddiv('Welcome to Text RPG');
     adddiv('- Play -');
@@ -169,13 +343,12 @@ function submit(){
             var input = $("#command_line").val().toString();
             setupplayer(input);
             adddiv('Hello ' + player.name +'! Welcome to the World of Text RPG!\nType in commands to play through.');
-            //set up map, monsters...
-            var goblin = new Goblin('Goblin');
+            generatemap();
             game_state = PLAY_NON_COMBAT;
         } else if(game_state === PLAY_NON_COMBAT){
             var input = $("#command_line").val().toString().toLowerCase();
             if(input === "map"){
-                map();
+                showmap();
             } else if(input === "exit" || input === "quit"){
                 adddiv('Goodbye');
                 game_state = STARTPAGE;
@@ -188,8 +361,18 @@ function submit(){
             } else if(startWith(input, "fight")){
                 var str = input.substring("fight ".length);
                 if(str.length > 0){
-                    game_state = COMBAT;
+                    //game_state = COMBAT;
+                    combat();
+                } else {
+                    adddiv("Define what you want to fight.");
                 }
+            } else if(input === "room"){
+                let m = Map[player.x][player.y].monster;
+                var names = "";
+                for(let i = 0; i < m.length; i++){
+                    names += m[i].name + " level " + m[i].level + "\n";
+                }
+                addp(names);
             }
         } else if(game_state === COMBAT){
             adddiv("combat stuff");
@@ -223,6 +406,33 @@ function adddiv(str){//$('<div>', { text:str}).css("text-align", "center").inser
 }
 
 /**
+ * Adds a HTML element (div) before the #placeholder.
+ * Has a typing effect.
+ * @param {String} str The element's text.
+ * @param {String} color the color
+ */
+function adddiv_c(str, color){//$('<div>', { text:str}).css("text-align", "center").insertBefore("#placeholder").fadeIn(1000);
+    var ele = $('<div>');
+    ele.css({'text-align': 'center', 'color': color}).insertBefore("#placeholder");
+    var speed = 20 / str.length;
+    typeWriter(ele, str, 0, speed);
+}
+
+
+/**
+ * Adds a HTML element (p) before the #placeholder.
+ * Has a typing effect.
+ * @param {String} str The elemen's text.
+ */
+function addp(str){//$('<div>', { text:str}).css("text-align", "center").insertBefore("#placeholder").fadeIn(1000);
+    var ele = $('<p>');
+    ele.css("text-align", "center").insertBefore("#placeholder");
+    $('</p>').insertBefore("#placeholder");
+    var speed = 20 / str.length;
+    typeWriter(ele, str, 0, speed);
+}
+
+/**
  * Add a typing effect to a HTML element's text.
  * @param {HTMLElement} ele 
  * @param {String} str String to type into HTML element.
@@ -242,7 +452,7 @@ function typeWriter(ele, str, i, speed){
  * Adds a new <p> element.
  */
 function addline(){//new line
-    $('<p>').css("text-align", "center").insertBefore("#placeholder");
+    var ele = $('<p>').css("text-align", "center").insertBefore("#placeholder");
     $('</p>').css("text-align", "center").insertBefore("#placeholder");
 }
 
@@ -269,21 +479,13 @@ function exa(name){ //examine
     } else {
         adddiv("'" + name + "' was not found");
     } 
-    /*
-    var found = 0;
-    for(i = 0; i < ObjList.length; i++){
-        var obj = ObjList[i];
-        if(obj.name.toLowerCase() === name.toLowerCase()){
-            adddiv(txt + ": " + obj.examine());
-            found = 1;
-            break;
-        }
-    }
-    if(found === 0){
-        adddiv("'" + txt + "' was not found");
-    }*/
 }
 
+/**
+ * Looks for a ObjParent child in ObjList. Returns ObjParent child.
+ * @param {String} name name of the object to look for.
+ * @returns {ObjParent} ObjParent
+ */
 function lookforobj(name){
     var i = 0;
     for(i = 0; i < ObjList.length; i++){
@@ -295,6 +497,8 @@ function lookforobj(name){
     return undefined;
 }
 
+
+
 /**
  * Set up the player.
  * @param {String} name 
@@ -302,6 +506,9 @@ function lookforobj(name){
 function setupplayer(name){
     player.name = name;
     player.desc = "The Main Player.";
+    player.x = Math.floor(Map_Size / 2);
+    player.y = player.x;
+    player.init();
 }
 
 /**
@@ -326,6 +533,41 @@ function startWith(txt, word){
     if(a == word){
         return true;
     } else {
-        return false;
+        return (txt === word);
+    }
+}
+
+/**
+ * Reset and create the map.
+ */
+
+function generatemap(){
+    Map = new Array(Map_Size);
+    for(let y = 0; y < Map_Size; y++){
+        Map[y] = new Array(Map_Size).fill(0);
+    }
+    var i = 0;
+    var j = i;
+    for(i = 0; i < Map_Size; i++){
+        for(j = 0; j < Map_Size; j++){
+            var name = i + "_" + j;
+            var room = new Room(name);
+            room.setupRoom(false, i, j);
+            Map[i][j] = room;
+        }
+    }
+}
+
+/**
+ * shows map
+ */
+function showmap(){
+    var str = "";
+    for(let i = 0; i < Map_Size; i++){
+        for(let j = 0; j < Map_Size; j++){
+            str += ("[ level = " + Map[i][j].name + " ]");  
+        }
+        adddiv(str);
+        str = "";
     }
 }

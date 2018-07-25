@@ -8,7 +8,7 @@ var count = 0;
 /**
  * Size of Map to generate. width = height = map size.
  */
-var Map_Size = 20;
+var Map_Size = 3;
 
 var ATTACK = 0;
 var DEFENSE = 1;
@@ -18,6 +18,11 @@ var RUNAWAY = 3;
 var TYPINGSPEED = 10;
 var TYPEMINRAN = 5;
 var TYPEMAXRAN = 10;
+
+var VKLEFT = 37;
+var VKUP = 38;
+var VKRIGHT = 39;
+var VKDOWN = 40;
 
 /**
  * Object to store rooms.s
@@ -48,6 +53,7 @@ $(document).ready(function(){
     if(!LOADED){
         setwelcomepage();
         $("form").submit(submit);
+        $("#command_line").keyup(keyinput);
         player = new Player("");
     }
     LOADED = true;
@@ -235,4 +241,27 @@ function showmap(){
 
 function getInterval(str){
     return str.length / TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
+}
+
+function keyinput(e){
+    var keynum = e.which;
+    console.log(keynum);
+    //console.log("x: " + player.x + ", y: " + player.y);
+    if(keynum == VKUP){
+        if(player.x != 0){
+            player.x -= 1;
+        }
+    } else if(keynum == VKDOWN){
+        if(player.x != Map_Size - 1){
+            player.x += 1;
+        }
+    } else if(keynum == VKLEFT){
+        if(player.y != 0){
+            player.y -= 1;
+        }
+    } else if(keynum == VKRIGHT){
+        if(player.y != Map_Size - 1){
+            player.y += 1;
+        }
+    }
 }

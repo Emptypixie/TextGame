@@ -133,7 +133,16 @@ function aftersubmit(){
     $('#command_line').val("");
     addline();
     window.scrollTo(0, document.body.scrollHeight);
-    $("#console").scrollTop($("#console").height());
+    
+    let l = $("#console > div").length + $("#console > p").length;
+
+    if(l > 100){
+        for(let i = 0; i < 5; i++){
+            $("#console > div")[0].remove();
+        }
+    }
+
+    $("#console").scrollTop($("#console").height());//scroll #console to bottom
 }
 
 

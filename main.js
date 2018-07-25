@@ -133,6 +133,7 @@ function aftersubmit(){
     $('#command_line').val("");
     addline();
     window.scrollTo(0, document.body.scrollHeight);
+    $("#console").scrollTop($("#console").height());
 }
 
 function getinput(){
@@ -194,6 +195,7 @@ function typeWriter(ele, str, i){
     var interval =  getInterval(str);
     if(i < str.length){
         ele.text(ele.text() + str.charAt(i));
+        $("#console").scrollTop($("#console").height());//scroll #console to bottom
         i++;
         return window.setTimeout(typeWriter, interval, ele, str, i);
     } else return true;

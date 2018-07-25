@@ -15,7 +15,7 @@ function fight(num){
             m.splice(index, 1);
         }
         if(m.length == 0){//check if there are monsters in currnent room
-            removeCombat();
+            sleep(1500, removeCombat());
             game_state = PLAY_NON_COMBAT;
         } else {
             for(let i = 0; i < m.length; i++){
@@ -60,7 +60,6 @@ function damageFunc(c_att, c_def){
     redrawlife(c_def, dmg);
     redrawmp(c_def);
     var c = 0;
-
 }
 
 /**
@@ -113,6 +112,7 @@ function draw_name_hp_mp(creature){
     drawname(creature);
     drawnewlife(creature);
     drawnewmp(creature);
+    $("#console").scrollTop($("#console").height());
 }
 
 /**

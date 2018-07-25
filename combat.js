@@ -7,26 +7,45 @@ function fight(num){
     var i = getRand(0, m.length - 1);
     var opponent = m[i];
 
-    damageFunc(player, opponent);
-
-    if(opponent.hpnow <= 0){//check if opponent hp is 0
-        adddiv("You defeated " + opponent.name + ".");
-        
-        var index = m.indexOf(opponent);//delete monster from current room
-        m.splice(index, 1);
-    }
-
-    if(m.length == 0){//check if there are monsters in currnent room
-        removeCombat();
-        game_state = PLAY_NON_COMBAT;
-    } else {
-        for(let i = 0; i < m.length; i++){
-            damageFunc(m[i], player);
-            if(player.hpnow <= 0){//player dead!
-                
+    damageFunc(player, opponent);//player attacks opponent
+    sleep(500, function(){
+        if(opponent.hpnow <= 0){//check if opponent hp is 0
+            adddiv("You defeated " + opponent.name + ".");
+            var index = m.indexOf(opponent);//delete monster from current room
+            m.splice(index, 1);
+        }
+        if(m.length == 0){//check if there are monsters in currnent room
+            removeCombat();
+            game_state = PLAY_NON_COMBAT;
+        } else {
+            for(let i = 0; i < m.length; i++){
+                damageFunc(m[i], player);
+                if(player.hpnow <= 0){//player dead!
+                    sleep(1000, function(){
+                        adddiv("You were killed by " + m[i] + ".");
+                    });
+                }
             }
         }
-    }
+    });
+}
+
+/**
+ * 
+ * @param {number} waitSec time to wait in mill sec
+ * @param {*} callbackFunc what to do after time runs out
+ */
+function sleep(waitSec, callbackFunc){
+    var spanedSec = 0;
+    var id = setInterval(function(){
+        spanedSec += 100;
+        if(spanedSec >= waitSec){
+            clearInterval(id);
+            if(callbackFunc){
+                callbackFunc();
+            }
+        }
+    }, 100);
 }
 
 /**
@@ -37,9 +56,11 @@ function fight(num){
 function damageFunc(c_att, c_def){
     var dmg = damageCalc(c_att, c_def);//damage player deals to opponent
     c_def.hpnow -= dmg;
-    addDamageLog(c_def, dmg);
+    adddiv(c_att.name + " deals " + dmg +" damage to " + c_def.name + ".");
     redrawlife(c_def, dmg);
     redrawmp(c_def);
+    var c = 0;
+
 }
 
 /**
@@ -54,13 +75,24 @@ function damageCalc(c_att, c_def){
     return dmg;
 }
 
+/**
+ * Appends player and monster name, hp, mp bar to #combat_area
+ * Also adds string "combat with monster1, monster2, .... bega." before #placeholder
+ */
 function drawCombat(){
     var m = Map[player.x][player.y].monster;
     if(m.length != 0){
-        
+        var str = "Combat with ";
         for(let i = 0; i < m.length; i++){
             draw_name_hp_mp(m[i]);
+            str += m[i].name;
+            if(i + 1 != m.length){
+                str += ", ";
+            } else {
+                str += " began.";
+            }
         }
+        adddiv(str);
         addlineafter();
         draw_name_hp_mp(player);        
     } else {
@@ -70,6 +102,10 @@ function drawCombat(){
     
 }
 
+/**
+ * Append creature's name, hp, mp bar to #combat_area
+ * @param {Creature} creature creature to draw name, hp, mp
+ */
 function draw_name_hp_mp(creature){
     var ele = $('<div>').css({"text-align": "center"});
     ele.attr("id",creature.id);
@@ -87,7 +123,7 @@ function redrawlife(creature, dmg){
     var id = "#" + creature.id + "hp";
     var ele = $(id);
     //ele.text(numtoline(creature.hpnow));
-    typeWriterDel(ele, dmg);
+    return typeWriterDel(ele, dmg);
 }
 
 /**
@@ -109,7 +145,7 @@ function drawnewlife(creature){
     var ele = $('<div>').css({"text-align": "center", "color": "red"});
     ele.attr("id", creature.id + "hp");
     $("#combat_area").append(ele);
-    typeWriter(ele, str, 0);
+    return typeWriter(ele, str, 0);
 }
 
 /**
@@ -121,7 +157,7 @@ function drawnewmp(creature){
     var ele = $('<div>').css({"text-align": "center", "color": "blue"});
     ele.attr("id", creature.id + "mp");
     $("#combat_area").append(ele);
-    typeWriter(ele, str, 0);
+    return typeWriter(ele, str, 0);
 }
 
 /**
@@ -133,9 +169,11 @@ function drawname(creature){
     var ele = $('<div>').css("text-align", "center");
     ele.attr("id", creature.id + "name");
     $("#combat_area").append(ele);
-    typeWriter(ele, str, 0);
+    return typeWriter(ele, str, 0);
 }
-
+/**
+ * appends --------vs--------- to #combat_area
+ */
 function addlineafter(){
     var ele = $('<p>').css("text-align", "center");
     ele.text("----------------  vs  ----------------");
@@ -194,13 +232,4 @@ function removeElement(ele, i){
             ele.parent().empty();
         }
     }    
-}
-
-/**
- * Adds a damage log
- * @param {Creature} creature creature that recieved damage
- * @param {number} dmg damge dealt
- */
-function addDamageLog(creature, dmg){
-    adddiv(creature.name + ": " + "-" + dmg + " HP");
 }

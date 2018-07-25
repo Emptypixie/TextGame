@@ -8,7 +8,7 @@ var count = 0;
 /**
  * Size of Map to generate. width = height = map size.
  */
-var Map_Size = 3;
+var Map_Size = 5;
 
 var ATTACK = 0;
 var DEFENSE = 1;
@@ -250,18 +250,22 @@ function keyinput(e){
     if(keynum == VKUP){
         if(player.x != 0){
             player.x -= 1;
-        }
+            adddiv("You advance north.");
+        } else {adddiv("You cannot go north. You are at the North most area!");}
     } else if(keynum == VKDOWN){
         if(player.x != Map_Size - 1){
             player.x += 1;
-        }
+            adddiv("You advance south.");
+        } else {adddiv("You cannot go south. You are at the South most area!");}
     } else if(keynum == VKLEFT){
         if(player.y != 0){
             player.y -= 1;
-        }
+            adddiv("You advance west.");
+        } else {adddiv("You cannot go west. You are at the West most area!");}
     } else if(keynum == VKRIGHT){
         if(player.y != Map_Size - 1){
             player.y += 1;
-        }
+            adddiv("You advance east.");
+        } else {adddiv("You cannot go east. You are at the East most area!");}
     }
 }

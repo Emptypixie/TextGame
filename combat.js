@@ -30,23 +30,6 @@ function fight(num){
     });
 }
 
-/**
- * 
- * @param {number} waitSec time to wait in mill sec
- * @param {*} callbackFunc what to do after time runs out
- */
-function sleep(waitSec, callbackFunc){
-    var spanedSec = 0;
-    var id = setInterval(function(){
-        spanedSec += 100;
-        if(spanedSec >= waitSec){
-            clearInterval(id);
-            if(callbackFunc){
-                callbackFunc();
-            }
-        }
-    }, 100);
-}
 
 /**
  * 
@@ -202,31 +185,32 @@ function removeCombat(){
     ch1 = $("#combat_area > div"); //array of div with creature id
     for(let i = 0; i < ch1.length; i++){
             var ele = $("#" + ch1[i].id);
-            removeElement(ele, ele.text().length);
+            removeCombatElement(ele, ele.text().length);
     }
-    removeElement($("#vs"), $("#vs").text().length);
+    removeCombatElement($("#vs"), $("#vs").text().length);
     
     //$("#combat_area").empty();
 }
 
 /**
  * Deletes text of html element in typewriter style,
- * then remove the element
+ * then remove the element.
+ * Used after combat
  * @param {} ele a jquery element
  * @param {number} i should be ele.text().length
  */
-function removeElement(ele, i){
+function removeCombatElement(ele, i){
     var interval = TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
     var str = ele.text();
     str = str.substring(0, str.length - 1);
     if(i > 0){
         ele.text(str);
         i -= 1;
-        window.setTimeout(removeElement, interval, ele, i);
+        window.setTimeout(removeCombatElement, interval, ele, i);
     } else {
         var ar = ele.siblings();
         if(ar.length != 0){
-            console.log("siblings left");
+            //console.log("siblings left");
             ele.remove();
         } else {
             ele.parent().empty();

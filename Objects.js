@@ -260,12 +260,16 @@ class Player extends Creature{
     /**
      * Add a job to player.job (dict).
      * @param {String} jobname 
+     * @returns {boolean} true if success, false if fail
      */
     setJob(jobname){
         if((jobname in JOBDICT)){
-            this.job[jobname.toString()] = JOBDICT[jobname];
+            //Object.keys(player.job).length is the number of keys in dictionary 'job'
+            this.job[Object.keys(player.job).length] = JOBDICT[jobname];
+            return true;//success
         } else {
-            console.log(jobname + ": no such job name in JOBDICT.");
+            console.log(jobname + ": no such job name in JOBDICT. Please try again.");
+            return false;//fail
         }
     }
 

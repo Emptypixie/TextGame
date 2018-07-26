@@ -8,14 +8,14 @@ var count = 0;
 /**
  * Size of Map to generate. width = height = map size.
  */
-var Map_Size = 5;
+var Map_Size = 50;
 
 var ATTACK = 0;
 var DEFENSE = 1;
 var EVADE = 2;
 var RUNAWAY = 3;
 
-var TYPINGSPEED = 10;
+var TYPINGSPEED = 50;
 var TYPEMINRAN = 5;
 var TYPEMAXRAN = 10;
 
@@ -52,9 +52,17 @@ $(document).ready(function(){
         setwelcomepage();
         $("form").submit(submit);
         $("#command_line").keyup(keyinput);
-        //player = new Player("");
+        /*$("#console").bind("DOMNodeInserted",function(){
+            sleep(500,);
+        }); */
+        window.setInterval(function(){
+                $("#console").animate(
+                    {scrollTop: $("#console").scrollTop() + $("#console").height()},
+                     900, 'swing');
+        }, 1000);
     }
     LOADED = true;
+    
 });
 
 /**
@@ -69,6 +77,25 @@ function setwelcomepage(){
     adddiv('- Help -');
     adddiv('####################################');
     addline();
+}
+
+/**reset player object. */
+function resetPlayer(){
+    player = new Player();
+}
+
+/**empty console except #placeholder and #combat_area. */
+function emptyConsole(){
+    ch1 = $("#console > *");
+    for(let i = 0; i < ch1.length; i++){
+        if(ch1[i].id != "placeholder" && ch1[i].id != "combat_area"){
+            ch1[i].remove();
+        }
+    }
+}
+
+function emptyCombatarea(){
+    $("#combat_area").empty();
 }
 
 /**
@@ -104,9 +131,11 @@ function submit(){
                 });
             } else if(Object.keys(player.job).length == 0){
                 input = input.toLowerCase();
-                player.setJob(input);
-                generatemap();
-                game_state = PLAY_NON_COMBAT;
+                if(player.setJob(input)){
+                    adddiv("You start your adventure as a " + player.job[0].name + ".");
+                    generatemap();
+                    game_state = PLAY_NON_COMBAT;
+                }
             }
             
         } else if(game_state === PLAY_NON_COMBAT){
@@ -155,15 +184,24 @@ function aftersubmit(){
     addline();
     window.scrollTo(0, document.body.scrollHeight);
     
-    let l = $("#console > div").length + $("#console > p").length;
-
-    if(l > 100){
+    let d = $("#console > div").length;
+    let p = $("#console > p").length;
+    if(d > 50){
         for(let i = 0; i < 5; i++){
             $("#console > div")[0].remove();
         }
     }
+    if(p > 50){
+        for(let i = 0; i < 5; i++){
+            $("#console > p")[0].remove();
+        }
+    }
 
-    $("#console").scrollTop($("#console").height() * 10);//scroll #console to bottom
+    //scrollBottomConsole();
+    //$("#console").scrollTop($("#console").height() + $("#console").scrollTop());//scroll #console to bottom
+    /*console.log("console scrolltop",$("#console").scrollTop());
+    console.log('console height',$("#console").height());
+    console.log('placeholder offset().top', $("#placeholder").offset().top); */
 }
 
 
@@ -260,27 +298,29 @@ function getInterval(str){
 
 function keyinput(e){
     var keynum = e.which;
-    console.log(keynum);
+    //console.log(keynum);
     //console.log("x: " + player.x + ", y: " + player.y);
-    if(keynum == VKUP){
-        if(player.x != 0){
-            player.x -= 1;
-            adddiv("You advance north.");
-        } else {adddiv("You cannot go north. You are at the North most area!");}
-    } else if(keynum == VKDOWN){
-        if(player.x != Map_Size - 1){
-            player.x += 1;
-            adddiv("You advance south.");
-        } else {adddiv("You cannot go south. You are at the South most area!");}
-    } else if(keynum == VKLEFT){
-        if(player.y != 0){
-            player.y -= 1;
-            adddiv("You advance west.");
-        } else {adddiv("You cannot go west. You are at the West most area!");}
-    } else if(keynum == VKRIGHT){
-        if(player.y != Map_Size - 1){
-            player.y += 1;
-            adddiv("You advance east.");
-        } else {adddiv("You cannot go east. You are at the East most area!");}
+    if(game_state == PLAY_NON_COMBAT){
+        if(keynum == VKUP){
+            if(player.x != 0){
+                player.x -= 1;
+                adddiv("You advance north.");
+            } else {adddiv("You cannot go north. You are at the North most area!");}
+        } else if(keynum == VKDOWN){
+            if(player.x != Map_Size - 1){
+                player.x += 1;
+                adddiv("You advance south.");
+            } else {adddiv("You cannot go south. You are at the South most area!");}
+        } else if(keynum == VKLEFT){
+            if(player.y != 0){
+                player.y -= 1;
+                adddiv("You advance west.");
+            } else {adddiv("You cannot go west. You are at the West most area!");}
+        } else if(keynum == VKRIGHT){
+            if(player.y != Map_Size - 1){
+                player.y += 1;
+                adddiv("You advance east.");
+            } else {adddiv("You cannot go east. You are at the East most area!");}
+        }
     }
 }

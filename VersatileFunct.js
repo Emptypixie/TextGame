@@ -72,7 +72,6 @@ function adddiv_c(str, color){//$('<div>', { text:str}).css("text-align", "cente
 function addp(str){//$('<div>', { text:str}).css("text-align", "center").insertBefore("#placeholder").fadeIn(1000);
     var ele = $('<p>');
     ele.css("text-align", "center").insertBefore("#placeholder");
-    $('</p>').insertBefore("#placeholder");
     return typeWriter(ele, str, 0);
 }
 
@@ -86,12 +85,18 @@ function typeWriter(ele, str, i){
     var interval =  getInterval(str);
     if(i < str.length){
         ele.text(ele.text() + str.charAt(i));
-        $("#console").scrollTop($("#console").height());//scroll #console to bottom
         i++;
         return window.setTimeout(typeWriter, interval, ele, str, i);
-    } else return true;
+    } else {
+        //scrollBottomConsole();
+        return true;
+    }
 }
 
+/**Scroll to the bottom of #console */
+function scrollBottomConsole(){
+    $("#console").scrollTop($("#combat_area").offset().top + $("#combat_area").height());
+}
 /**
  * Delete letters from a HTML element's text
  * @param {HTMLElement} ele HTML element
@@ -114,7 +119,7 @@ function typeWriterDel(ele, i){
 function addline(){//new line
     var ele = $('<p>').css("text-align", "center").insertBefore("#placeholder");
     $('</p>').css("text-align", "center").insertBefore("#placeholder");
-    $("#console").scrollTop($("#console").height());//scroll #console to bottom
+    //scrollBottomConsole();
 }
 
 /**

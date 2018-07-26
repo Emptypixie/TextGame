@@ -23,6 +23,10 @@ function fight(num){
                 if(player.hpnow <= 0){//player dead!
                     sleep(1000, function(){
                         adddiv("You were killed by " + m[i].name + ".");
+                        emptyConsole();
+                        setwelcomepage();
+                        emptyCombatarea();
+                        game_state = STARTPAGE;
                     });
                 }
             }
@@ -125,11 +129,21 @@ function redrawmp(creature){
  * @param {Creature} creature 
  */
 function drawnewlife(creature){
-    str = numtoline(creature.hpnow);
-    var ele = $('<div>').css({"text-align": "center", "color": "red"});
+    var hp = creature.hpnow;
+    var mx = 100
+    while(hp > mx){
+        let str = numtoline(mx);
+        let ele = $('<div>').css({"text-align": "center", "color": "red"});
+        ele.attr("id", creature.id + "hp");
+        $("#combat_area").append(ele);
+        typeWriter(ele, str, 0);
+        hp -= mx;
+    }
+    let str = numtoline(hp);
+    let ele = $('<div>').css({"text-align": "center", "color": "red"});
     ele.attr("id", creature.id + "hp");
     $("#combat_area").append(ele);
-    return typeWriter(ele, str, 0);
+    typeWriter(ele, str, 0);
 }
 
 /**
@@ -137,7 +151,7 @@ function drawnewlife(creature){
  * @param {Creature} creature 
  */
 function drawnewmp(creature){
-    str = numtoline(creature.mpnow);
+    var str = numtoline(creature.mpnow);
     var ele = $('<div>').css({"text-align": "center", "color": "blue"});
     ele.attr("id", creature.id + "mp");
     $("#combat_area").append(ele);
@@ -149,7 +163,7 @@ function drawnewmp(creature){
  * @param {Creature} creature 
  */
 function drawname(creature){
-    str = creature.name;
+    var str = creature.name;
     var ele = $('<div>').css("text-align", "center");
     ele.attr("id", creature.id + "name");
     $("#combat_area").append(ele);
@@ -183,7 +197,7 @@ function numtoline(num){
  * empty id = combat_area
  */
 function removeCombat(){
-    ch1 = $("#combat_area > div"); //array of div with creature id
+    var ch1 = $("#combat_area > div"); //array of div with creature id
     for(let i = 0; i < ch1.length; i++){
             var ele = $("#" + ch1[i].id);
             removeCombatElement(ele, ele.text().length);

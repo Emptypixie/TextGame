@@ -10,6 +10,6 @@
     align-self: center;
     height:500px;
     border:1px solid #ccc;
-    font:16px/26px Georgia, Garamond, Serif;
+    font:16px Georgia, Garamond, Serif;
     overflow: auto;
 }

@@ -50,6 +50,12 @@ class Item extends ObjParent{
  */
 class Creature extends ObjParent{
 
+    constructor(name){
+        super(name);
+        /**Choose from JOBDICT */
+        this.job = {};
+    }
+
     /**
      * Set Creature's stat levels 
      * Stat should have attack, def, magic, magic def,
@@ -96,7 +102,13 @@ class Creature extends ObjParent{
         }
         return l;
     }
+
+    /**Set job of creature. this.job is a dictionary. */
+    setJob(){
+        alert("Set job of " + this.name + "!");
+    }
 };
+
 
 /**All monster's parent */
 class Monster extends Creature{
@@ -110,7 +122,6 @@ class Monster extends Creature{
         this.setlevel(level);
         this.setxp();
         var found = 0;
-        
     }
 
     /**set min and max level of monster */
@@ -130,7 +141,8 @@ class Monster extends Creature{
         }
         /**xp gained for defeating monster */
         this.xp = best_att + best_def + this.HP + this.level;
-    }
+    } 
+
 };
 
 
@@ -245,4 +257,18 @@ class Player extends Creature{
         this.level = level;
     }
 
+    /**
+     * Add a job to player.job (dict).
+     * @param {String} jobname 
+     */
+    setJob(jobname){
+        if((jobname in JOBDICT)){
+            this.job[jobname.toString()] = JOBDICT[jobname];
+        } else {
+            console.log(jobname + ": no such job name in JOBDICT.");
+        }
+    }
+
 };
+
+

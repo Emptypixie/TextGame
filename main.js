@@ -30,11 +30,6 @@ var VKDOWN = 40;
 var Map;
 
 
-
-
-var player;
-
-
 var STARTPAGE = 0;
 var SETUP = 1;
 var PLAY_NON_COMBAT = 2;
@@ -45,6 +40,9 @@ var COMBAT = 3;
  */
 var game_state = STARTPAGE;
 
+/**the player object */
+var player;
+
 var LOADED = false;
 /**
  * Called when the document (the web site) is ready.
@@ -54,7 +52,7 @@ $(document).ready(function(){
         setwelcomepage();
         $("form").submit(submit);
         $("#command_line").keyup(keyinput);
-        player = new Player("");
+        //player = new Player("");
     }
     LOADED = true;
 });
@@ -63,6 +61,7 @@ $(document).ready(function(){
  * Sets up the title screen.
  */
 function setwelcomepage(){
+    player = new Player("");
     adddiv('####################################');
     adddiv('Welcome to Text RPG');
     adddiv('- Play -');
@@ -80,7 +79,7 @@ function submit(){
     if(input.toLowerCase() != ''){
         adddiv(">> " + $("#command_line").val().toString());
         if(game_state === STARTPAGE){
-            input.toLowerCase();
+            input = input.toLowerCase();
             if(input === "help"){
                 adddiv('help');
             } else if(input === "play"){
@@ -90,12 +89,28 @@ function submit(){
                 adddiv('Options');
             }
         } else if(game_state === SETUP){
-            setupplayer(input);
-            adddiv('Hello ' + player.name +'! Welcome to the World of Text RPG!\nType in commands to play through.');
-            generatemap();
-            game_state = PLAY_NON_COMBAT;
+            
+            if(player.name == ""){
+                setupplayer(input);
+                adddiv('Hello ' + player.name +'! Welcome to the World of Text RPG!\nType in commands to play through.');
+                sleep(1500, function(){
+                    adddiv("What class would you like to play?");
+                    sleep(1000, function(){
+                        adddiv("Warrior");
+                        adddiv("Mage");
+                        adddiv("Ranger");
+                        adddiv("Priest");
+                    });
+                });
+            } else if(Object.keys(player.job).length == 0){
+                input = input.toLowerCase();
+                player.setJob(input);
+                generatemap();
+                game_state = PLAY_NON_COMBAT;
+            }
+            
         } else if(game_state === PLAY_NON_COMBAT){
-            input.toLowerCase();
+            input = input.toLowerCase();
             if(input === "map"){
                 showmap();
             } else if(input === "exit" || input === "quit"){
@@ -120,7 +135,7 @@ function submit(){
                 addp(names);
             }
         } else if(game_state === COMBAT){
-            input.toLowerCase();
+            input = input.toLowerCase();
             if(input === "attack" || input === "a"){
                 fight(ATTACK);
             } else if(input === "defend" || input === "d"){
@@ -148,7 +163,7 @@ function aftersubmit(){
         }
     }
 
-    $("#console").scrollTop($("#console").height());//scroll #console to bottom
+    $("#console").scrollTop($("#console").height() * 10);//scroll #console to bottom
 }
 
 
@@ -190,7 +205,7 @@ function lookforobj(name){
  * @param {String} name 
  */
 function setupplayer(name){
-    player.name = name;
+    player = new Player(name);//must be before generating map    
     player.desc = "The Main Player.";
     player.x = Math.floor(Map_Size / 2);
     player.y = player.x;

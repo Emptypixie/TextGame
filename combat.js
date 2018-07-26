@@ -22,7 +22,7 @@ function fight(num){
                 damageFunc(m[i], player);
                 if(player.hpnow <= 0){//player dead!
                     sleep(1000, function(){
-                        adddiv("You were killed by " + m[i] + ".");
+                        adddiv("You were killed by " + m[i].name + ".");
                     });
                 }
             }
@@ -38,6 +38,7 @@ function fight(num){
  */
 function damageFunc(c_att, c_def){
     var dmg = damageCalc(c_att, c_def);//damage player deals to opponent
+    if(dmg < 0) {dmg = 0;}
     c_def.hpnow -= dmg;
     adddiv(c_att.name + " deals " + dmg +" damage to " + c_def.name + ".");
     redrawlife(c_def, dmg);

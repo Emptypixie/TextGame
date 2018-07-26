@@ -114,6 +114,7 @@ function typeWriterDel(ele, i){
 function addline(){//new line
     var ele = $('<p>').css("text-align", "center").insertBefore("#placeholder");
     $('</p>').css("text-align", "center").insertBefore("#placeholder");
+    $("#console").scrollTop($("#console").height());//scroll #console to bottom
 }
 
 /**

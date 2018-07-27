@@ -37,6 +37,8 @@ function fight(num){
 function defeatedOpponent(opponent){
     var m = Map[player.x][player.y].monster;
     adddiv("You defeated " + opponent.name + ".");
+    adddiv("You gained " + opponent.xp + " xp.");
+    player.xp += opponent.xp;
     var index = m.indexOf(opponent);//delete monster from current room
     m.splice(index, 1);
 }

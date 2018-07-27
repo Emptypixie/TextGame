@@ -54,6 +54,7 @@ class Creature extends ObjParent{
         super(name);
         /**Choose from jobs.js */
         this.job = [];
+        /**creature race */
         this.race = [];
     }
 
@@ -64,6 +65,7 @@ class Creature extends ObjParent{
      * @param {number} level Creature's level
     */
     setlevel(level){
+        this.xp = 0;
         var l = this.adjustlevel(level);
         /**the creature's level */
         this.level = l;
@@ -116,8 +118,15 @@ class Creature extends ObjParent{
 };
 
 
+
+
 /**All monster's parent */
 class Monster extends Creature{
+    constructor(name){
+        super(name);
+        this.setJob();
+        this.setRace();
+    }
     /**
      * Call this first...
      * This sets name, leve, xp
@@ -127,7 +136,6 @@ class Monster extends Creature{
         this.setmaxminlv();
         this.setlevel(level);
         this.setxp();
-        var found = 0;
     }
 
     /**set min and max level of monster */
@@ -150,6 +158,9 @@ class Monster extends Creature{
     } 
 
 };
+
+
+
 
 
 /**
@@ -241,7 +252,10 @@ class Player extends Creature{
         this.inv.push(obj);
     }
     
+    /**reset player stats, job, race */
     init(){
+        this.job = [];
+        this.race = [];
         this.xp = 0;
         this.level = 1;
         this.Attack = 100;
@@ -272,16 +286,16 @@ class Player extends Creature{
     setJob(jobname){
         switch (jobname){
             case 'warrior':
-                this.job[0] = new Warrior();
+                this.job[0] = new jWarrior();
                 break;
             case 'mage':
-                this.job[0] = new Mage();
+                this.job[0] = new jMage();
                 break;
             case 'ranger':
-                this.job[0] = new Ranger();
+                this.job[0] = new jRanger();
                 break;
             case 'priest':
-                this.job[0] = new Priest();
+                this.job[0] = new jPriest();
                 break;
         }
 
@@ -294,7 +308,7 @@ class Player extends Creature{
     }
 
     setRace(){
-        this.race[0] = new Human();
+        this.race[0] = new rHuman();
     }
 };
 

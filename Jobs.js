@@ -27,7 +27,7 @@ class Job{
     }
 }
 
-class Warrior extends Job{
+class jWarrior extends Job{
     constructor(name){
         if(name == undefined){
             super('warrior');
@@ -49,7 +49,7 @@ class Warrior extends Job{
     }
 } 
 
-class Mage extends Job{
+class jMage extends Job{
     constructor(name){
         if(name == undefined){
             super('mage');
@@ -71,7 +71,7 @@ class Mage extends Job{
     }
 } 
 
-class Ranger extends Job{
+class jRanger extends Job{
     constructor(name){
         if(name == undefined){
             super('ranger');
@@ -93,7 +93,7 @@ class Ranger extends Job{
     }
 } 
 
-class Priest extends Job{
+class jPriest extends Job{
     constructor(name){
         if(name == undefined){
             super('priest');

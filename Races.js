@@ -1,4 +1,4 @@
-class Goblin extends Job{
+class rGoblin extends Job{
     constructor(name){
         if(name == undefined){
             super('goblin');
@@ -20,7 +20,7 @@ class Goblin extends Job{
     }
 }
 
-class Human extends Job{
+class rHuman extends Job{
     constructor(name){
         if(name == undefined){
             super('human');
@@ -42,7 +42,7 @@ class Human extends Job{
     }
 }
 
-class Skeleton extends Job{
+class rSkeleton extends Job{
     constructor(name){
         if(name == undefined){
             super('skeleton');
@@ -63,7 +63,7 @@ class Skeleton extends Job{
     }
 }
 
-class Dragon extends Job{
+class rDragon extends Job{
     constructor(name){
         if(name == undefined){
             super('dragon');

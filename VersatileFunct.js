@@ -86,6 +86,10 @@ function typeWriter(ele, str, i){
     if(i < str.length){
         ele.text(ele.text() + str.charAt(i));
         i++;
+        /*if(i < str.length){
+            ele.text(ele.text() + str.charAt(i));
+            i++;
+        } */
         return window.setTimeout(typeWriter, interval, ele, str, i);
     } else {
         //scrollBottomConsole();
@@ -103,12 +107,12 @@ function scrollBottomConsole(){
  * @param {number} i number of letters to delete
  */
 function typeWriterDel(ele, i){
-    var interval = getInterval(i);
     var str = ele.text();
-    str = str.substring(0, str.length - 1);
+    var interval = getInterval(str);
+    str = str.substring(1, str.length - 1);
     if(i > 0){
         ele.text(str);
-        i -= 1;
+        i -= 2;
         return window.setTimeout(typeWriterDel, interval, ele, i);
     } else return true;
 }
@@ -150,4 +154,9 @@ function sleep(waitSec, callbackFunc){
             }
         }
     }, 100);
+}
+
+
+function getInterval(str){
+    return str.length / TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
 }

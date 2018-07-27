@@ -1,3 +1,6 @@
+/**each hp and mp bar max length */
+var MAXBARLENGTH = 100;
+
 /**
  * fight according to style
  * @param {number} num use static variables like ATTACK, DEFNSE
@@ -8,11 +11,10 @@ function fight(num){
     var opponent = m[i];
 
     damageFunc(player, opponent);//player attacks opponent
+
     sleep(500, function(){
         if(opponent.hpnow <= 0){//check if opponent hp is 0
-            adddiv("You defeated " + opponent.name + ".");
-            var index = m.indexOf(opponent);//delete monster from current room
-            m.splice(index, 1);
+            defeatedOpponent(opponent);
         }
         if(m.length == 0){//check if there are monsters in currnent room
             sleep(1500, removeCombat());
@@ -21,20 +23,37 @@ function fight(num){
             for(let i = 0; i < m.length; i++){
                 damageFunc(m[i], player);
                 if(player.hpnow <= 0){//player dead!
-                    sleep(1000, function(){
-                        adddiv("You were killed by " + m[i].name + ".");
-                        emptyConsole();
-                        setwelcomepage();
-                        emptyCombatarea();
-                        game_state = STARTPAGE;
-                    });
+                    playerDefeated(m[i]);
                 }
             }
         }
     });
 }
 
+/**
+ * Use when opponent monster is defeated.
+ * @param {Creature} opponent the opponent creature
+ */
+function defeatedOpponent(opponent){
+    var m = Map[player.x][player.y].monster;
+    adddiv("You defeated " + opponent.name + ".");
+    var index = m.indexOf(opponent);//delete monster from current room
+    m.splice(index, 1);
+}
 
+/**
+ * Use when player is defeated.
+ * @param {monster} monster the monster that gave the final blow.
+ */
+function playerDefeated(monster){
+    sleep(3000, function(){
+        alert("You were killed by " + monster.name + ". Game will restart.");
+        emptyConsole();
+        setwelcomepage();
+        emptyCombatarea();
+        game_state = STARTPAGE;
+    });
+}
 /**
  * 
  * @param {Creature} c_att attacking creature
@@ -42,12 +61,11 @@ function fight(num){
  */
 function damageFunc(c_att, c_def){
     var dmg = damageCalc(c_att, c_def);//damage player deals to opponent
-    if(dmg < 0) {dmg = 0;}
+    //if(dmg < 0) {dmg = 0;}
     c_def.hpnow -= dmg;
     adddiv(c_att.name + " deals " + dmg +" damage to " + c_def.name + ".");
     redrawlife(c_def, dmg);
     redrawmp(c_def);
-    var c = 0;
 }
 
 /**
@@ -109,9 +127,22 @@ function draw_name_hp_mp(creature){
  */
 function redrawlife(creature, dmg){
     var id = "#" + creature.id + "hp";
-    var ele = $(id);
-    //ele.text(numtoline(creature.hpnow));
-    return typeWriterDel(ele, dmg);
+    var element = $(id);
+    while(true){
+        let len = element.text().length;
+        if(len == 0) { //element not found
+            break;
+        } else if(len < dmg){ // dmg bigger than hp bar
+            len = element.text().length;
+            element.remove();
+            dmg -= len;
+            element = $(id);
+        } else { // 
+            element.text(numtoline(MAXBARLENGTH - dmg));
+            break;
+        }
+    } return true;
+    
 }
 
 /**
@@ -130,14 +161,13 @@ function redrawmp(creature){
  */
 function drawnewlife(creature){
     var hp = creature.hpnow;
-    var mx = 100
-    while(hp > mx){
-        let str = numtoline(mx);
+    while(hp > MAXBARLENGTH){
+        let str = numtoline(MAXBARLENGTH);
         let ele = $('<div>').css({"text-align": "center", "color": "red"});
         ele.attr("id", creature.id + "hp");
         $("#combat_area").append(ele);
         typeWriter(ele, str, 0);
-        hp -= mx;
+        hp -= MAXBARLENGTH;
     }
     let str = numtoline(hp);
     let ele = $('<div>').css({"text-align": "center", "color": "red"});
@@ -145,14 +175,22 @@ function drawnewlife(creature){
     $("#combat_area").append(ele);
     typeWriter(ele, str, 0);
 }
-
 /**
  * Draws new MP bar in combat_area.
  * @param {Creature} creature 
  */
 function drawnewmp(creature){
-    var str = numtoline(creature.mpnow);
-    var ele = $('<div>').css({"text-align": "center", "color": "blue"});
+    var mp = creature.mpnow;
+    while(mp > MAXBARLENGTH){
+        let str = numtoline(MAXBARLENGTH);
+        let ele = $('<div>').css({"text-align": "center", "color": "blue"});
+        ele.attr("id", creature.id + "mp");
+        $("#combat_area").append(ele);
+        typeWriter(ele, str, 0);
+        mp -= MAXBARLENGTH;
+    }
+    let str = numtoline(mp);
+    let ele = $('<div>').css({"text-align": "center", "color": "blue"});
     ele.attr("id", creature.id + "mp");
     $("#combat_area").append(ele);
     return typeWriter(ele, str, 0);
@@ -200,7 +238,15 @@ function removeCombat(){
     var ch1 = $("#combat_area > div"); //array of div with creature id
     for(let i = 0; i < ch1.length; i++){
             var ele = $("#" + ch1[i].id);
+            ele.attr('id', "#" + ch1[i].id + i);
             removeCombatElement(ele, ele.text().length);
+            /*if(ele.length == 1){
+                removeCombatElement(ele, ele.text().length);
+            } else {
+                ele.forEach(function(e){
+                    removeCombatElement(e, e.text().length);
+                });
+            } */
     }
     removeCombatElement($("#vs"), $("#vs").text().length);
     
@@ -217,10 +263,10 @@ function removeCombat(){
 function removeCombatElement(ele, i){
     var interval = TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
     var str = ele.text();
-    str = str.substring(0, str.length - 1);
+    str = str.substring(1, str.length - 1);
     if(i > 0){
         ele.text(str);
-        i -= 1;
+        i -= 2;
         window.setTimeout(removeCombatElement, interval, ele, i);
     } else {
         var ar = ele.siblings();

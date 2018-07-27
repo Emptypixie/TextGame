@@ -15,9 +15,9 @@ var DEFENSE = 1;
 var EVADE = 2;
 var RUNAWAY = 3;
 
-var TYPINGSPEED = 50;
-var TYPEMINRAN = 5;
-var TYPEMAXRAN = 10;
+var TYPINGSPEED = 10;
+var TYPEMINRAN = 1;
+var TYPEMAXRAN = 5;
 
 var VKLEFT = 37;
 var VKUP = 38;
@@ -120,9 +120,9 @@ function submit(){
             if(player.name == ""){
                 setupplayer(input);
                 adddiv('Hello ' + player.name +'! Welcome to the World of Text RPG!\nType in commands to play through.');
-                sleep(1500, function(){
+                sleep(1000, function(){
                     adddiv("What class would you like to play?");
-                    sleep(1000, function(){
+                    sleep(700, function(){
                         adddiv("Warrior");
                         adddiv("Mage");
                         adddiv("Ranger");
@@ -292,9 +292,6 @@ function showmap(){
     }
 }
 
-function getInterval(str){
-    return str.length / TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
-}
 
 function keyinput(e){
     var keynum = e.which;

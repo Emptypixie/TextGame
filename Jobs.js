@@ -1,10 +1,3 @@
-/**
- * dictionary of job classes
- */
-var JOBDICT = {
-    
-};
-
 class Job{
     constructor(name){
         this.name = name;
@@ -47,7 +40,6 @@ class Warrior extends Job{
         this.spell = {};
     }
 } 
-JOBDICT["warrior"] = new Warrior("warrior");
 
 class Mage extends Job{
     setskill(){
@@ -62,7 +54,6 @@ class Mage extends Job{
         this.spell = {};
     }
 } 
-JOBDICT["mage"] = new Mage("mage");
 
 class Ranger extends Job{
     setskill(){
@@ -77,7 +68,6 @@ class Ranger extends Job{
         this.spell = {};
     }
 } 
-JOBDICT["ranger"] = new Ranger("ranger");
 
 class Priest extends Job{
     setskill(){
@@ -92,4 +82,3 @@ class Priest extends Job{
         this.spell = {};
     }
 } 
-JOBDICT["priest"] = new Priest("priest");

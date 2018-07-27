@@ -52,8 +52,8 @@ class Creature extends ObjParent{
 
     constructor(name){
         super(name);
-        /**Choose from JOBDICT */
-        this.job = {};
+        /**Choose from jobs.js */
+        this.job = [];
     }
 
     /**
@@ -237,12 +237,12 @@ class Player extends Creature{
     
     init(){
         this.level = 1;
-        this.Attack = 1;
+        this.Attack = 100;
         this.Defense = 1;
         this.Magic = 1;
         this.MagicDef = 1;
         this.Speed = 1;
-        this.HP = 1;
+        this.HP = 100;
         this.MP = 1;
         this.Prayer = 1;
         this.Resistance = 1;
@@ -263,12 +263,25 @@ class Player extends Creature{
      * @returns {boolean} true if success, false if fail
      */
     setJob(jobname){
-        if((jobname in JOBDICT)){
-            //Object.keys(player.job).length is the number of keys in dictionary 'job'
-            this.job[Object.keys(player.job).length] = JOBDICT[jobname];
+        switch (jobname){
+            case 'warrior':
+                this.job[0] = new Warrior(jobname);
+                break;
+            case 'mage':
+                this.job[0] = new Mage(jobname);
+                break;
+            case 'ranger':
+                this.job[0] = new Ranger(jobname);
+                break;
+            case 'priest':
+                this.job[0] = new Priest(jobname);
+                break;
+        }
+
+        if(this.job[0] != undefined){
             return true;//success
         } else {
-            console.log(jobname + ": no such job name in JOBDICT. Please try again.");
+            console.log(jobname + ": no such job the list");
             return false;//fail
         }
     }

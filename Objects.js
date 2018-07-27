@@ -54,6 +54,7 @@ class Creature extends ObjParent{
         super(name);
         /**Choose from jobs.js */
         this.job = [];
+        this.race = [];
     }
 
     /**
@@ -103,9 +104,14 @@ class Creature extends ObjParent{
         return l;
     }
 
-    /**Set job of creature. this.job is a dictionary. */
+    /**Set job of creature. this.job is a array. */
     setJob(){
-        alert("Set job of " + this.name + "!");
+        throw new Error("Set job of " + this.name + "!");
+    }
+
+    /**Set of race of creature */
+    setRace(){
+        throw new Error("Set job of " + this.name + "!");
     }
 };
 
@@ -236,6 +242,7 @@ class Player extends Creature{
     }
     
     init(){
+        this.xp = 0;
         this.level = 1;
         this.Attack = 100;
         this.Defense = 1;
@@ -265,16 +272,16 @@ class Player extends Creature{
     setJob(jobname){
         switch (jobname){
             case 'warrior':
-                this.job[0] = new Warrior(jobname);
+                this.job[0] = new Warrior();
                 break;
             case 'mage':
-                this.job[0] = new Mage(jobname);
+                this.job[0] = new Mage();
                 break;
             case 'ranger':
-                this.job[0] = new Ranger(jobname);
+                this.job[0] = new Ranger();
                 break;
             case 'priest':
-                this.job[0] = new Priest(jobname);
+                this.job[0] = new Priest();
                 break;
         }
 
@@ -286,6 +293,9 @@ class Player extends Creature{
         }
     }
 
+    setRace(){
+        this.race[0] = new Human();
+    }
 };
 
 

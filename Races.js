@@ -1,36 +1,29 @@
-class Job{
+class Goblin extends Job{
     constructor(name){
-        this.name = name;
-        this.maxlevel = 15;
-        this.level = 1;
-        /**skill name (lower case string) : skill instance */
-        this.skill = {};
-        /**passive skill name (lower case string) : passive skill instance */
-        this.passiveskill = {};
-        /**spell name (lower case string) : spell instance */
-        this.spell = {};
-        this.setskill();
-        this.setpassiveskill();
-        this.setspell();
+        if(name == undefined){
+            super('goblin');
+        } else {
+            super(name);
+        }
     }
 
     setskill(){
-        alert("set skill! ( " + (typeof this) + " )");
+        this.skill["slash"] = Slash1;
     }
 
     setpassiveskill(){
-        alert("set passive skill! ( " + (typeof this) + " )")
+        this.passiveskill["courage"] = Courage1;
     }
 
     setspell(){
-        alert("set spell! ( " + (typeof this) + " )");
+        this.spell = {};
     }
 }
 
-class Warrior extends Job{
+class Human extends Job{
     constructor(name){
         if(name == undefined){
-            super('warrior');
+            super('human');
         } else {
             super(name);
         }
@@ -47,17 +40,16 @@ class Warrior extends Job{
     setspell(){
         this.spell = {};
     }
-} 
+}
 
-class Mage extends Job{
+class Skeleton extends Job{
     constructor(name){
         if(name == undefined){
-            super('mage');
+            super('skeleton');
         } else {
             super(name);
         }
     }
-
     setskill(){
         this.skill["slash"] = Slash1;
     }
@@ -69,19 +61,18 @@ class Mage extends Job{
     setspell(){
         this.spell = {};
     }
-} 
+}
 
-class Ranger extends Job{
+class Dragon extends Job{
     constructor(name){
         if(name == undefined){
-            super('ranger');
+            super('dragon');
         } else {
             super(name);
         }
     }
-
     setskill(){
-        this.skill["slash"] = Slash1;
+        this.skill["dragon breath"] = DragonBreath1;
     }
 
     setpassiveskill(){
@@ -91,26 +82,4 @@ class Ranger extends Job{
     setspell(){
         this.spell = {};
     }
-} 
-
-class Priest extends Job{
-    constructor(name){
-        if(name == undefined){
-            super('priest');
-        } else {
-            super(name);
-        }
-    }
-
-    setskill(){
-        this.skill["slash"] = Slash1;
-    }
-
-    setpassiveskill(){
-        this.passiveskill["courage"] = Courage1;
-    }
-
-    setspell(){
-        this.spell = {};
-    }
-} 
+}

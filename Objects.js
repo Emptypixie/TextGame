@@ -56,6 +56,10 @@ class Creature extends ObjParent{
         this.job = [];
         /**creature race */
         this.race = [];
+        /**xp owned by creature. monsters will drop it for players.
+         * players will lose it when they are defeated.
+         */
+        this.xp = 0;
     }
 
     /**
@@ -65,7 +69,6 @@ class Creature extends ObjParent{
      * @param {number} level Creature's level
     */
     setlevel(level){
-        this.xp = 0;
         var l = this.adjustlevel(level);
         /**the creature's level */
         this.level = l;
@@ -149,11 +152,10 @@ class Monster extends Creature{
         if(best_att < this.Magic){
             best_att = this.Magic;
         }
-        var best_def = this.Deffence;
+        var best_def = this.Defense;
         if(best_def < this.MagicDef){
             best_def = this.MagicDef;
         }
-        /**xp gained for defeating monster */
         this.xp = best_att + best_def + this.HP + this.level;
     } 
 
@@ -254,9 +256,6 @@ class Player extends Creature{
     
     /**reset player stats, job, race */
     init(){
-        this.job = [];
-        this.race = [];
-        this.xp = 0;
         this.level = 1;
         this.Attack = 100;
         this.Defense = 1;

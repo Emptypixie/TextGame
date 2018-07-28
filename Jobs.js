@@ -13,12 +13,6 @@ class Job{
         this.name = name;
         this.maxlevel = 15;
         this.level = 1;
-        /**skill name (lower case string) : skill instance */
-        this.skill = {};
-        /**passive skill name (lower case string) : passive skill instance */
-        this.passiveskill = {};
-        /**spell name (lower case string) : spell instance */
-        this.spell = {};
         this.creature = creature;
         this.addskill();
         this.addpassiveskill();
@@ -56,15 +50,15 @@ class jWarrior extends Job{
     }
 
     addskill(){
-        this.creature.skill["slash"] = Slash1;
+        addElementIfNotContain(this.creature.skill, Slash1);
     }
 
     addpassiveskill(){
-        this.creature.passiveskill["courage"] = Courage1;
+        addElementIfNotContain(this.creature.passiveskill, Courage1);
     }
 
     addspell(){
-        this.creature.spell = {};
+        this.creature.spell = [];
     }
 
     addstat(){
@@ -82,15 +76,15 @@ class jMage extends Job{
     }
 
     addskill(){
-        this.creature.skill["slash"] = Slash1;
+        addElementIfNotContain(this.creature.skill, Slash1);
     }
 
     addpassiveskill(){
-        this.creature.passiveskill["courage"] = Courage1;
+        addElementIfNotContain(this.creature.passiveskill, Courage1);
     }
 
     addspell(){
-        this.creature.spell = {};
+        this.creature.spell = [];
     }
 
     addstat(){
@@ -108,15 +102,15 @@ class jRanger extends Job{
     }
 
     addskill(){
-        this.creature.skill["slash"] = Slash1;
+        addElementIfNotContain(this.creature.skill, Slash1);
     }
 
     addpassiveskill(){
-        this.creature.passiveskill["courage"] = Courage1;
+        addElementIfNotContain(this.creature.passiveskill, Courage1);
     }
 
     addspell(){
-        this.creature.spell = {};
+        this.creature.spell = [];
     }
 
     addstat(){
@@ -134,15 +128,15 @@ class jPriest extends Job{
     }
 
     addskill(){
-        this.creature.skill["slash"] = Slash1;
+        addElementIfNotContain(this.creature.skill, Slash1);
     }
 
     addpassiveskill(){
-        this.creature.passiveskill["courage"] = Courage1;
+        addElementIfNotContain(this.creature.passiveskill, Courage1);
     }
 
     addspell(){
-        this.creature.spell = {};
+        this.creature.spell = [];
     }
 
     addstat(){

@@ -37,8 +37,34 @@ function fight(num){
 function defeatedOpponent(opponent){
     var m = monsterAtPlayerRoom();
     adddiv("You defeated " + opponent.name + ".");
-    adddiv_c("You gained " + opponent.xp + " xp.", "yellow");
-    player.xp += opponent.xp;
+
+    playerGainXp(opponent.xp);
+
+    var index = m.indexOf(opponent);//delete monster from current room
+    m.splice(index, 1);
+}
+
+/**Xp calculation from my favorite game... */
+function getxpforlv(L){
+    return Math.floor(1.2 * 1 / 8 * L * (L - 1) + 75 * (Math.pow(2, (L - 1) / 7) - 1) / (1 - Math.pow(2, - 1 / 7)) - 0.109 * L);
+}
+
+/**
+ * Adds xp to player.
+ * Also check for level up.
+ * @param {number} xp xp gained
+ */
+function playerGainXp(xp){
+    adddiv_c("You gained " + xp + " xp.", "yellow");
+    player.xp += xp;
+
+    levelUp();
+}
+
+/** Check if player has enough xp for level up.
+ * If so, then level up. Mulltiple level up is possible.
+ */
+function levelUp(){
     let nextlvxp = getxpforlv(player.level + 1);
     while(player.xp > nextlvxp){
         if(player.level != 100){
@@ -56,14 +82,7 @@ function defeatedOpponent(opponent){
             adddiv(str + " xp till next level.");
         }
     }
-    var index = m.indexOf(opponent);//delete monster from current room
-    m.splice(index, 1);
 }
-
-function getxpforlv(L){
-    return Math.floor(1.2 * 1 / 8 * L * (L - 1) + 75 * (Math.pow(2, (L - 1) / 7) - 1) / (1 - Math.pow(2, - 1 / 7)) - 0.109 * L);
-}
-
 
 /**
  * Use when player is defeated.
@@ -78,6 +97,8 @@ function playerDefeated(monster){
         game_state = STARTPAGE;
     });
 }
+
+
 /**
  * 
  * @param {Creature} c_att attacking creature

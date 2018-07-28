@@ -17,19 +17,19 @@ class rGoblin extends Race{
     }
 
     addskill(){
-        this.creature.skill["slash"] = Slash1;
+        addElementIfNotContain(this.creature.skill, Slash1);
     }
 
     addpassiveskill(){
-        this.creature.passiveskill["courage"] = Courage1;
+        addElementIfNotContain(this.creature.passiveskill, Courage1);
     }
 
     addspell(){
-        this.creature.spell = {};
+        this.creature.spell = [];
     }
 
     addstat(){
-        this.creature.hp += 1;
+        this.creature.hp += 13;
     }
 }
 
@@ -43,15 +43,15 @@ class rHuman extends Race{
     }
 
     addskill(){
-        this.creature.skill["slash"] = Slash1;
+        addElementIfNotContain(this.creature.skill, Slash1);
     }
 
     addpassiveskill(){
-        this.creature.passiveskill["courage"] = Courage1;
+        addElementIfNotContain(this.creature.passiveskill, Courage1);
     }
 
     addspell(){
-        this.creature.spell = {};
+        this.creature.spell = [];
     }
 
     addstat(){
@@ -69,19 +69,19 @@ class rSkeleton extends Race{
     }
 
     addskill(){
-        this.creature.skill["slash"] = Slash1;
+        addElementIfNotContain(this.creature.skill, Slash1);
     }
 
     addpassiveskill(){
-        this.creature.passiveskill["courage"] = Courage1;
+        addElementIfNotContain(this.creature.passiveskill, Courage1);
     }
 
     addspell(){
-        this.creature.spell = {};
+        this.creature.spell = [];
     }
 
     addstat(){
-        this.creature.hp += 1;
+        this.creature.hp += 2;
     }
 }
 
@@ -94,19 +94,19 @@ class rDragon extends Race{
         }
     }
     addskill(){
-        this.creature.skill["slash"] = Slash1;
+        addElementIfNotContain(this.creature.skill, Slash1);
     }
 
     addpassiveskill(){
-        this.creature.passiveskill["courage"] = Courage1;
+        addElementIfNotContain(this.creature.passiveskill, Courage1);
     }
 
     addspell(){
-        this.creature.spell["fireball"] = FireBall1;
+        addElementIfNotContain(this.creature.spell, FireBall1);
     }
 
     addstat(){
-        this.creature.hp += 1;
+        this.creature.hp += 100;
     }
 }
 
@@ -120,18 +120,18 @@ class rZombie extends Race{
         }
     }
     addskill(){
-        this.creature.skill["slash"] = Slash1;
+        addElementIfNotContain(this.creature.skill, Slash1);
     }
 
     addpassiveskill(){
-        this.creature.passiveskill["courage"] = Courage1;
+        addElementIfNotContain(this.creature.passiveskill, Courage1);
     }
 
     addspell(){
-        this.creature.spell["fireball"] = FireBall1;
+        addElementIfNotContain(this.creature.spell, FireBall1);
     }
 
     addstat(){
-        this.creature.hp += 1;
+        this.creature.hp += 10;
     }
 }

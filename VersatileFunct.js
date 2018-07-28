@@ -195,3 +195,58 @@ function adddiv_list(arr){
 function monsterAtPlayerRoom(){
     return Map[player.x][player.y].monster;
 }
+
+/**
+ * Change the first letter of each word to upper case.
+ * @param {String} s input String to change first letter to Uppper case
+ */
+function toUpper(s){
+    var u = s.toUpperCase();
+    var s2 = s;
+    for(let i = 0; i < s2.length; i++){
+        if(i == 0){
+            s = u.charAt(0) + s.substring(1);
+        } else if(s.charAt(i - 1) == ' '){
+            s = s.substring(0, i) + u.charAt(i);
+            if(i + 1 != s2.length){
+                s += s2.substring(i + 1);
+            }
+        }
+    }
+    return s;
+}
+
+/**
+ * Change an array into string separating the content with comma.
+ * ex) [1, 2, 3, 4, 5]
+ * returns "1, 2, 3, 4, 5"
+ * @param {Array} ar array to change to list
+ * @param {boolean} b if each element has name and you want the names
+ */
+function arrayToCommaList(ar, b){
+    var str = "";
+    for(let i = 0; i < ar.length; i++){
+        if(b){
+            str += ar[i].name;
+        }else{
+            str += ar[i];
+        }
+        if(i + 1 != ar.length){
+            str += ", ";
+        }
+    }
+
+    return str;
+}
+
+/**
+ * Check if a elemet exists in an array.
+ * If not, array.push(element)
+ * @param {Array} array the array to add
+ * @param {*} element the element to check and add
+ */
+function addElementIfNotContain(array, element){
+    if(!array.includes(element)){
+        array.push(element);
+    }
+}

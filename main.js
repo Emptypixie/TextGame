@@ -11,9 +11,11 @@ var count = 0;
 var Map_Size = 50;
 
 var ATTACK = 0;
-var DEFENSE = 1;
-var EVADE = 2;
-var RUNAWAY = 3;
+var BLOCK = 1;
+var PARRY = 2;
+var EVADE = 3;
+var SKILLSPELL = 4;
+var RUNAWAY = 5;
 
 var TYPINGSPEED = 10;
 var TYPEMINRAN = 1;
@@ -139,9 +141,9 @@ function submit(){
                 if(player.setRace(input)){
                     addline();
                     adddiv("You start your adventure as a " + 
-                    player.race.name + " " +
-                    player.job[0].name + ".");
-    
+                    toUpper(player.race.name + " " + player.job[0].name)
+                    + ".");
+                    addline();
                     player.hpnow = player.hp;
                     player.mpnow = player.mp;
                     showstats(player);
@@ -180,10 +182,14 @@ function submit(){
             input = input.toLowerCase();
             if(input === "attack" || input === "a"){
                 fight(ATTACK);
-            } else if(input === "defend" || input === "d"){
-                fight(DEFENSE);
+            } else if(input === "block" || input === "b"){
+                fight(BLOCK);
+            } else if(input === "parry" || input === "p"){
+                fight(PARRY);
             } else if(input === "evade" || input === "e"){
                 fight(EVADE);
+            } else if(input === "skill" || input === "spell" || input === "s"){
+                fight(SKILLSPELL);
             } else if(input === "run away" || input === "r"){
                 fight(RUNAWAY);
             }
@@ -195,7 +201,7 @@ function submit(){
 function aftersubmit(){
     $('#command_line').val("");
     addline();
-    window.scrollTo(0, document.body.scrollHeight);
+    //window.scrollTo(0, document.body.scrollHeight);
     
     let d = $("#console > div").length;
     let p = $("#console > p").length;
@@ -305,8 +311,14 @@ function showmap(){
     }
 }
 
+/**
+ * 
+ * @param {Creature} creature 
+ */
 function showstats(creature){
     adddiv(creature.name + " stats:");
+    adddiv("Race: " + toUpper(creature.race.name));
+    adddiv("Job: " + toUpper(arrayToCommaList(creature.job, true)));
     adddiv("Level: " + creature.level);
     adddiv("HP: " + creature.hpnow + " / " + creature.hp);
     adddiv("MP: " + creature.mpnow + " / " +creature.mp);
@@ -317,7 +329,10 @@ function showstats(creature){
     adddiv("Speed: " + creature.speed);
     adddiv("Prayer: " + creature.prayer);
     adddiv("Resistance: " + creature.resistance);
-
+    addline();
+    adddiv("Skill: " + toUpper(arrayToCommaList(creature.skill, true)));
+    adddiv("Passive Skill: " + toUpper(arrayToCommaList(creature.passiveskill, true)));
+    adddiv("Spell: " + toUpper(arrayToCommaList(creature.spell, true)));
 }
 
 

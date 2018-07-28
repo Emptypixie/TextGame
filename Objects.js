@@ -60,11 +60,11 @@ class Creature extends ObjParent{
         /**creature race */
         this.race = undefined;
         /**active skill */
-        this.skill = {};
+        this.skill = [];
         /**passive skill */
-        this.passiveskill = {};
+        this.passiveskill = [];
         /**spell */
-        this.spell = {};
+        this.spell = [];
         /**xp owned by creature. monsters will drop it for players.
          * players will lose it when they are defeated.
          */

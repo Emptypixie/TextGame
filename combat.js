@@ -37,13 +37,13 @@ function fight(num){
 function defeatedOpponent(opponent){
     var m = Map[player.x][player.y].monster;
     adddiv("You defeated " + opponent.name + ".");
-    adddiv("You gained " + opponent.xp + " xp.");
+    adddiv_c("You gained " + opponent.xp + " xp.", "yellow");
     player.xp += opponent.xp;
     let nextlvxp = getxpforlv(player.level + 1);
     while(player.xp > nextlvxp){
         if(player.level != 100){
                 player.level += 1;
-                adddiv("You leveled up! You are now level " + player.level + ".");
+                adddiv_c("You leveled up! You are now level " + player.level + ".", "lime");
                 nextlvxp = getxpforlv(player.level + 1);
         } else {
             adddiv("You are already max level. You cannot gain any more xp.");
@@ -234,7 +234,7 @@ function drawnewmp(creature){
  * @param {Creature} creature 
  */
 function drawname(creature){
-    var str = creature.name;
+    var str = creature.name  + " level " + creature.level;
     var ele = $('<div>').css("text-align", "center");
     ele.attr("id", creature.id + "name");
     $("#combat_area").append(ele);

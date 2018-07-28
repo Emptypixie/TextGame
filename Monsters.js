@@ -1,5 +1,12 @@
 class Goblin extends Monster{
-
+    constructor(name){
+        if(name == undefined){
+            super('goblin');
+        } else {
+            super(name);
+        }
+        this.basexp = 10;
+    }
     setmaxminlv(){
         this.maxlevel = 10;
         this.minlevel = 1;
@@ -19,6 +26,14 @@ class Goblin extends Monster{
 };
 
 class Zombie extends Monster{
+    constructor(name){
+        if(name == undefined){
+            super('zombie');
+        } else {
+            super(name);
+        }
+        this.basexp = 10;
+    }
     setmaxminlv(){
         this.maxlevel = 10;
         this.minlevel = 1;
@@ -38,6 +53,14 @@ class Zombie extends Monster{
 };
 
 class Dark_Warrior extends Monster{
+    constructor(name){
+        if(name == undefined){
+            super('dark warrior');
+        } else {
+            super(name);
+        }
+        this.basexp = 20;
+    }
     setmaxminlv(){
         this.maxlevel = 20;
         this.minlevel = 10;
@@ -57,7 +80,14 @@ class Dark_Warrior extends Monster{
 }
 
 class Dark_Priest extends Monster{
-    
+    constructor(name){
+        if(name == undefined){
+            super('dark priest');
+        } else {
+            super(name);
+        }
+        this.basexp = 20;
+    }
     setJob(){
         this.job[0] = new jPriest();
     }
@@ -77,6 +107,14 @@ class Dark_Priest extends Monster{
 }
 
 class Black_Dragon extends Monster{
+    constructor(name){
+        if(name == undefined){
+            super('black dragon');
+        } else {
+            super(name);
+        }
+        this.basexp = 1000;
+    }
     setJob(){
         this.job = [];
     }

@@ -126,6 +126,7 @@ class Monster extends Creature{
         super(name);
         this.setJob();
         this.setRace();
+        this.basexp = 0;
     }
     /**
      * Call this first...
@@ -145,15 +146,20 @@ class Monster extends Creature{
 
     /**sets xp of monster. Make sure to do setlevel first */
     setxp(){
-        var best_att = this.Attack;
-        if(best_att < this.Magic){
-            best_att = this.Magic;
-        }
-        var best_def = this.Defense;
-        if(best_def < this.MagicDef){
-            best_def = this.MagicDef;
-        }
-        this.xp = best_att + best_def + this.HP + this.level;
+        this.xp = Math.ceil(
+        this.basexp 
+        + (1 + 0.1425 * 
+            Math.pow(this.level, 0.6 * 
+                Math.log10(this.Attack * 1.3 + 
+                    this.Defense * 1.2+ 
+                    this.Magic * 1.3 + 
+                    this.MagicDef * 1.2 + 
+                    this.Prayer * 1.2 + 
+                    this.Resistance * 1.2 + 
+                    this.HP)
+                )
+            )
+        );
     } 
 
 };

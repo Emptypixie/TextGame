@@ -39,9 +39,25 @@ function defeatedOpponent(opponent){
     adddiv("You defeated " + opponent.name + ".");
     adddiv("You gained " + opponent.xp + " xp.");
     player.xp += opponent.xp;
+    let nextlvxp = getxpforlv(player.level + 1);
+    if(player.xp > nextlvxp){
+        if(player.level != 100){
+                player.level += 1;
+                adddiv("You leveled up! You are now level " + player.level + ".");
+                nextlvxp = getxpforlv(player.level + 1);
+                adddiv((nextlvxp - player.xp) + " xp till next level.");
+        } else {adddiv("You are already max level. You cannot gain any more xp.");}
+    } else {
+        adddiv((nextlvxp - player.xp) + " xp till next level.");
+    }
     var index = m.indexOf(opponent);//delete monster from current room
     m.splice(index, 1);
 }
+
+function getxpforlv(L){
+    return Math.floor(1 / 8 * L * (L - 1) + 75 * (Math.pow(2, (L - 1) / 7) - 1) / (1 - Math.pow(2, - 1 / 7)) - 0.109 * L);
+}
+
 
 /**
  * Use when player is defeated.

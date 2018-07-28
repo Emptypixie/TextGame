@@ -167,7 +167,7 @@ function submit(){
                 game_state = COMBAT;
                 drawCombat();
             } else if(input === "room"){
-                let m = monsterAtPlayerRoom()();
+                let m = monsterAtPlayerRoom();
                 var names = "";
                 for(let i = 0; i < m.length; i++){
                     names += m[i].name + " level " + m[i].level + "\n";
@@ -239,7 +239,7 @@ function exa(name){ //examine
  */
 function lookforobj(name){
     var i = 0;
-    var m = monsterAtPlayerRoom()();
+    var m = monsterAtPlayerRoom();
     for(i = 0; i < m.length; i++){
         var monster = m[i];
         if(monster.name.toLowerCase() === name.toLowerCase()){

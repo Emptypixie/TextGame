@@ -87,7 +87,7 @@ function damageFunc(c_att, c_def){
     c_def.hpnow -= dmg;
     adddiv(c_att.name + " deals " + dmg +" damage to " + c_def.name + ".");
     redrawlife(c_def, dmg);
-    redrawmp(c_def);
+    redrawmp(c_def, 0);//put used mp value in second argument
 }
 
 /**
@@ -155,12 +155,11 @@ function redrawlife(creature, dmg){
         if(len == 0) { //element not found
             break;
         } else if(len < dmg){ // dmg bigger than hp bar
-            len = element.text().length;
             element.remove();
             dmg -= len;
             element = $(id);
-        } else { // 
-            element.text(numtoline(MAXBARLENGTH - dmg));
+        } else { // hp bar len > dmg
+            element.text(numtoline(len - dmg));
             break;
         }
     } return true;
@@ -171,10 +170,22 @@ function redrawlife(creature, dmg){
  * Redraws the mp bar of crearture.
  * @param {Creature} creature 
  */
-function redrawmp(creature){
+function redrawmp(creature, mpused){
     var id = "#" + creature.id + "mp";
-    var ele = $(id);
-    ele.text(numtoline(creature.mpnow));
+    var element = $(id);
+    while(true){
+        let len = element.text().length;
+        if(len == 0) { //element not found
+            break;
+        } else if(len < mpused){ // mpused bigger than one mp bar
+            element.remove();
+            mpused -= len;
+            element = $(id);
+        } else { // mp bar len > mpused
+            element.text(numtoline(len - mpused));
+            break;
+        }
+    } return true;
 }
 
 /**

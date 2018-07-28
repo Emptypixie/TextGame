@@ -156,7 +156,10 @@ function sleep(waitSec, callbackFunc){
     }, 100);
 }
 
-
+/**
+ * Calculate interval from TYPINGSPEED and the string's length.
+ * @param {string} str what to type in.
+ */
 function getInterval(str){
     return str.length / TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
 }

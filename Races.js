@@ -1,85 +1,111 @@
-class rGoblin extends Job{
-    constructor(name){
-        if(name == undefined){
-            super('goblin');
-        } else {
-            super(name);
-        }
-    }
-
-    setskill(){
-        this.skill["slash"] = Slash1;
-    }
-
-    setpassiveskill(){
-        this.passiveskill["courage"] = Courage1;
-    }
-
-    setspell(){
-        this.spell = {};
+class Race extends Job{
+    constructor(creature, name){
+        if(creature == undefined || name == undefined)
+            throw Error("check constructor of " + typeof this);
+        else
+            super(creature, name);
     }
 }
 
-class rHuman extends Job{
-    constructor(name){
+class rGoblin extends Race{
+    constructor(creature, name){
         if(name == undefined){
-            super('human');
+            super(creature, 'goblin');
         } else {
-            super(name);
+            super(creature, name);
         }
     }
 
-    setskill(){
-        this.skill["slash"] = Slash1;
+    addskill(){
+        this.creature.skill["slash"] = Slash1;
     }
 
-    setpassiveskill(){
-        this.passiveskill["courage"] = Courage1;
+    addpassiveskill(){
+        this.creature.passiveskill["courage"] = Courage1;
     }
 
-    setspell(){
-        this.spell = {};
+    addspell(){
+        this.creature.spell = {};
+    }
+
+    addstat(){
+        this.creature.HP += 1;
     }
 }
 
-class rSkeleton extends Job{
-    constructor(name){
+class rHuman extends Race{
+    constructor(creature, name){
         if(name == undefined){
-            super('skeleton');
+            super(creature, 'human');
         } else {
-            super(name);
+            super(creature, name);
         }
     }
-    setskill(){
-        this.skill["slash"] = Slash1;
+
+    addskill(){
+        this.creature.skill["slash"] = Slash1;
     }
 
-    setpassiveskill(){
-        this.passiveskill["courage"] = Courage1;
+    addpassiveskill(){
+        this.creature.passiveskill["courage"] = Courage1;
     }
 
-    setspell(){
-        this.spell = {};
+    addspell(){
+        this.creature.spell = {};
+    }
+
+    addstat(){
+        this.creature.HP += 1;
     }
 }
 
-class rDragon extends Job{
-    constructor(name){
+class rSkeleton extends Race{
+    constructor(creature, name){
         if(name == undefined){
-            super('dragon');
+            super(creature, 'skeleton');
         } else {
-            super(name);
+            super(creature, name);
         }
     }
-    setskill(){
-        this.skill["dragon breath"] = DragonBreath1;
+
+    addskill(){
+        this.creature.skill["slash"] = Slash1;
     }
 
-    setpassiveskill(){
-        this.passiveskill["courage"] = Courage1;
+    addpassiveskill(){
+        this.creature.passiveskill["courage"] = Courage1;
     }
 
-    setspell(){
-        this.spell = {};
+    addspell(){
+        this.creature.spell = {};
+    }
+
+    addstat(){
+        this.creature.HP += 1;
+    }
+}
+
+class rDragon extends Race{
+    constructor(creature, name){
+        if(name == undefined){
+            super(creature, 'dragon');
+        } else {
+            super(creature, name);
+        }
+    }
+    addskill(){
+        this.creature.skill["slash"] = Slash1;
+    }
+
+    addpassiveskill(){
+        this.creature.passiveskill["courage"] = Courage1;
+    }
+
+    addspell(){
+        this.creature.spell["fireball"] = FireBall1;
+    }
+
+    addstat(){
+        this.creature.HP += 1;
     }
 }

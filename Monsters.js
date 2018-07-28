@@ -13,11 +13,11 @@ class Goblin extends Monster{
     }
 
     setJob(){
-        this.job[0] = new jWarrior();
+        this.job[0] = new jWarrior(this);
     }
 
     setRace(){
-        this.race[0] = new rGoblin();
+        this.race[0] = new rGoblin(this);
     }
 
     examine(){
@@ -40,11 +40,11 @@ class Zombie extends Monster{
     }
 
     setJob(){
-        this.job[0] = new jWarrior();
+        this.job[0] = new jWarrior(this);
     }
 
     setRace(){
-        this.race[0] = new rSkeleton();
+        this.race[0] = new rSkeleton(this);
     }
 
     examine(){
@@ -67,11 +67,11 @@ class Dark_Warrior extends Monster{
     }
 
     setJob(){
-        this.job[0] = new jWarrior();
+        this.job[0] = new jWarrior(this);
     }
 
     setRace(){
-        this.race[0] = new rHuman();
+        this.race[0] = new rHuman(this);
     }
 
     examine(){
@@ -89,11 +89,11 @@ class Dark_Priest extends Monster{
         this.basexp = 20;
     }
     setJob(){
-        this.job[0] = new jPriest();
+        this.job[0] = new jPriest(this);
     }
 
     setRace(){
-        this.race[0] = new rHuman();
+        this.race[0] = new rHuman(this);
     }
 
     setmaxminlv(){
@@ -120,7 +120,7 @@ class Black_Dragon extends Monster{
     }
 
     setRace(){
-        this.race[0] = new rDragon();
+        this.race[0] = new rDragon(this);
     }
     
     setmaxminlv(){

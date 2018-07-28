@@ -8,6 +8,9 @@ class ObjParent{
      * @param {String} name The name of the object.
      */
     constructor(name){
+        if(name == undefined){
+            name = 'id = ' + count;
+        }
         /**Object name. */
         this.name = name;
         /**Object id */
@@ -56,6 +59,12 @@ class Creature extends ObjParent{
         this.job = [];
         /**creature race */
         this.race = [];
+        /**active skill */
+        this.skill = {};
+        /**passive skill */
+        this.passiveskill = {};
+        /**spell */
+        this.spell = {};
         /**xp owned by creature. monsters will drop it for players.
          * players will lose it when they are defeated.
          */
@@ -122,11 +131,15 @@ class Creature extends ObjParent{
 
 /**All monster's parent */
 class Monster extends Creature{
+    /**
+     * @param {*} name the name of this monster
+     */
     constructor(name){
         super(name);
+        this.basexp = 0;
+        /**instance of self */
         this.setJob();
         this.setRace();
-        this.basexp = 0;
     }
     /**
      * Call this first...
@@ -160,7 +173,7 @@ class Monster extends Creature{
                 )
             )
         );
-    } 
+    }
 
 };
 
@@ -203,7 +216,7 @@ class Room extends ObjParent{
                 m = new Dark_Priest('Dark Priest');
             }
         } else {
-            m = new Black_Dragon('Black Dragon');
+            m = new Black_Dragon(name='Black Dragon');
         }
         m.x = this.x;
         m.y = this.y;
@@ -286,16 +299,16 @@ class Player extends Creature{
     setJob(jobname){
         switch (jobname){
             case 'warrior':
-                this.job[0] = new jWarrior();
+                this.job[0] = new jWarrior(player, jobname);
                 break;
             case 'mage':
-                this.job[0] = new jMage();
+                this.job[0] = new jMage(player, jobname);
                 break;
             case 'ranger':
-                this.job[0] = new jRanger();
+                this.job[0] = new jRanger(player, jobname);
                 break;
             case 'priest':
-                this.job[0] = new jPriest();
+                this.job[0] = new jPriest(player, jobname);
                 break;
         }
 
@@ -308,7 +321,7 @@ class Player extends Creature{
     }
 
     setRace(){
-        this.race[0] = new rHuman();
+        this.race[0] = new rHuman(player, jobname);
     }
 };
 

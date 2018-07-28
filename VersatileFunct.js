@@ -176,3 +176,18 @@ function separateNum(num){
 
     return str;
 }
+
+
+/**
+ * adddiv array in a list
+ * ex) writelist([A, B, C])
+ * 1. A
+ * 2. B
+ * 3. C
+ * @param {Array} arr array of string to output as list
+ */
+function adddiv_list(arr){
+    for(let i = 0; i < arr.length; i++){
+        adddiv((i + 1) + ". " + arr[i]);
+    }
+}

@@ -20,6 +20,7 @@ var DragonBreath1 = {
     skill: [function (){return 1000;}]
 };
 
+/**spell to deal weak damage */
 var FireBall1 = {
     description: "A small magical fire ball.",
     skill: [function(){return 10;}]

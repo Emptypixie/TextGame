@@ -109,3 +109,29 @@ class rDragon extends Race{
         this.creature.hp += 1;
     }
 }
+
+
+class rZombie extends Race{
+    constructor(creature, name){
+        if(name == undefined){
+            super(creature, 'zombie');
+        } else {
+            super(creature, name);
+        }
+    }
+    addskill(){
+        this.creature.skill["slash"] = Slash1;
+    }
+
+    addpassiveskill(){
+        this.creature.passiveskill["courage"] = Courage1;
+    }
+
+    addspell(){
+        this.creature.spell["fireball"] = FireBall1;
+    }
+
+    addstat(){
+        this.creature.hp += 1;
+    }
+}

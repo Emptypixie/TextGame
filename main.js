@@ -120,25 +120,34 @@ function submit(){
             if(player.name == ""){
                 setupplayer(input);
                 adddiv('Hello ' + player.name +'! Welcome to the World of Text RPG!\nType in commands to play through.');
-                sleep(1000, function(){
+                sleep(900, function(){
+                    addline();
                     adddiv("What class would you like to play?");
-                    sleep(700, function(){
-                        adddiv("Warrior");
-                        adddiv("Mage");
-                        adddiv("Ranger");
-                        adddiv("Priest");
+                    sleep(300, function(){
+                        adddiv_list(["Warrior", "Mage", "Ranger", "Priest"]);
                     });
                 });
-            } else if(Object.keys(player.job).length == 0){
+            } else if(player.job.length == 0){
                 input = input.toLowerCase();
-                if(player.setJob(input)){
-                    adddiv("You start your adventure as a " + player.job[0].name + ".");
-                    showstats(player);
-                    generatemap();
-                    game_state = PLAY_NON_COMBAT;
-                }
+                player.setJob(input);
+                addline();
+                adddiv("What race would you like to play?");
+                sleep(300, function(){
+                    adddiv_list(["Human", "Skeleton", "Zombie", "Dragon"]);
+                });
+            } else if(player.race.length == 0){
+                player.setRace(input);
+                addline();
+                adddiv("You start your adventure as a " + 
+                player.race[0].name + " " +
+                player.job[0].name + ".");
+
+                player.hpnow = player.hp;
+                player.mpnow = player.mp;
+                showstats(player);
+                generatemap();
+                game_state = PLAY_NON_COMBAT;
             }
-            
         } else if(game_state === PLAY_NON_COMBAT){
             input = input.toLowerCase();
             if(input === "map"){

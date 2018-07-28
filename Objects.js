@@ -267,6 +267,7 @@ class Player extends Creature{
      * @param {Item} obj object to add into inv
      */
     addinv(obj){
+        /**inv = inventory */
         this.inv.push(obj);
     }
     
@@ -299,16 +300,16 @@ class Player extends Creature{
     setJob(jobname){
         switch (jobname){
             case 'warrior':
-                this.job[0] = new jWarrior(player, jobname);
+                this.job[0] = new jWarrior(player);
                 break;
             case 'mage':
-                this.job[0] = new jMage(player, jobname);
+                this.job[0] = new jMage(player);
                 break;
             case 'ranger':
-                this.job[0] = new jRanger(player, jobname);
+                this.job[0] = new jRanger(player);
                 break;
             case 'priest':
-                this.job[0] = new jPriest(player, jobname);
+                this.job[0] = new jPriest(player);
                 break;
         }
 
@@ -320,8 +321,37 @@ class Player extends Creature{
         }
     }
 
-    setRace(){
-        this.race[0] = new rHuman(player, jobname);
+    /**set race of player 
+     * @param {String} racename the race name
+     * @returns {boolean} true if success, false if fail
+    */
+    setRace(racename){
+        racename.toLowerCase;
+        switch(racename){
+            case 'human':
+            case 1:
+                this.race[0] = new rHuman(this);
+                break;
+            case 'skeleton':
+            case 2:
+                this.race[0] = new rSkeleton(this);
+                break;
+            case 'zombie':
+            case 3:
+                this.race[0] = new rZombie(this);
+                break;
+            case 'dragon':
+            case 4:
+                this.race[0] = new rDragon(this);
+                break;
+        }
+        if(this.race[0] != undefined){
+            return true;//success
+        } else {
+            console.log(racename + ": no such race the list");
+            return false;//fail
+        }
+        
     }
 };
 

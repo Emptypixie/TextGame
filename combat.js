@@ -40,22 +40,26 @@ function defeatedOpponent(opponent){
     adddiv("You gained " + opponent.xp + " xp.");
     player.xp += opponent.xp;
     let nextlvxp = getxpforlv(player.level + 1);
-    if(player.xp > nextlvxp){
+    while(player.xp > nextlvxp){
         if(player.level != 100){
                 player.level += 1;
                 adddiv("You leveled up! You are now level " + player.level + ".");
                 nextlvxp = getxpforlv(player.level + 1);
-                adddiv((nextlvxp - player.xp) + " xp till next level.");
-        } else {adddiv("You are already max level. You cannot gain any more xp.");}
-    } else {
-        adddiv((nextlvxp - player.xp) + " xp till next level.");
+        } else {
+            adddiv("You are already max level. You cannot gain any more xp.");
+            break;
+        }
+    }
+    {
+        if(player.level != 100)
+            adddiv((nextlvxp - player.xp) + " xp till next level.");
     }
     var index = m.indexOf(opponent);//delete monster from current room
     m.splice(index, 1);
 }
 
 function getxpforlv(L){
-    return Math.floor(1 / 8 * L * (L - 1) + 75 * (Math.pow(2, (L - 1) / 7) - 1) / (1 - Math.pow(2, - 1 / 7)) - 0.109 * L);
+    return Math.floor(1.2 * 1 / 8 * L * (L - 1) + 75 * (Math.pow(2, (L - 1) / 7) - 1) / (1 - Math.pow(2, - 1 / 7)) - 0.109 * L);
 }
 
 
@@ -79,7 +83,7 @@ function playerDefeated(monster){
  */
 function damageFunc(c_att, c_def){
     var dmg = damageCalc(c_att, c_def);//damage player deals to opponent
-    //if(dmg < 0) {dmg = 0;}
+    if(dmg < 0) {dmg = 0;}
     c_def.hpnow -= dmg;
     adddiv(c_att.name + " deals " + dmg +" damage to " + c_def.name + ".");
     redrawlife(c_def, dmg);

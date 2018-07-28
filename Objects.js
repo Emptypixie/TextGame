@@ -83,18 +83,15 @@ class Creature extends ObjParent{
         /**Speed level */
         this.Speed = l;
         /**HP level */
-        this.HP = l;
+        this.HP = l * 10;
         /**MP level */
-        this.MP = l;
+        this.MP = l * 10;
         /**Prayer level */
         this.Prayer = l;
         /**Resistance level */
         this.Resistance = l;
-        /**Max hp */
-        this.maxhp = this.HP * 10;
-        this.maxmp = this.MP * 10;
-        this.hpnow = this.maxhp;
-        this.mpnow = this.maxmp;
+        this.hpnow = this.HP;
+        this.mpnow = this.MP;
     }
 
     /**adjust monster level to set level */
@@ -257,19 +254,17 @@ class Player extends Creature{
     /**reset player stats, job, race */
     init(){
         this.level = 1;
-        this.Attack = 100;
-        this.Defense = 1;
+        this.Attack = 1000;
+        this.Defense = 100;
         this.Magic = 1;
         this.MagicDef = 1;
         this.Speed = 1;
-        this.HP = 100;
+        this.HP = 1000;
         this.MP = 1;
         this.Prayer = 1;
         this.Resistance = 1;
-        this.maxhp = this.HP * 10;
-        this.maxmp = this.MP * 10;
-        this.hpnow = this.maxhp;
-        this.mpnow = this.maxmp;
+        this.hpnow = this.HP;
+        this.mpnow = this.MP;
     }
 
     /**Overrides Creature setlevel */

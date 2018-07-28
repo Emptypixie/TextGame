@@ -163,6 +163,8 @@ function submit(){
                     names += m[i].name + " level " + m[i].level + "\n";
                 }
                 addp(names);
+            } else if(input == 'stat' || input == 'stats'){
+                showstats(player);
             }
         } else if(game_state === COMBAT){
             input = input.toLowerCase();

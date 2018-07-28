@@ -128,25 +128,26 @@ function submit(){
                     });
                 });
             } else if(player.job.length == 0){
-                input = input.toLowerCase();
-                player.setJob(input);
-                addline();
-                adddiv("What race would you like to play?");
-                sleep(300, function(){
-                    adddiv_list(["Human", "Skeleton", "Zombie", "Dragon"]);
-                });
-            } else if(player.race.length == 0){
-                player.setRace(input);
-                addline();
-                adddiv("You start your adventure as a " + 
-                player.race[0].name + " " +
-                player.job[0].name + ".");
-
-                player.hpnow = player.hp;
-                player.mpnow = player.mp;
-                showstats(player);
-                generatemap();
-                game_state = PLAY_NON_COMBAT;
+                if(player.setJob(input)){
+                    addline();
+                    adddiv("What race would you like to play?");
+                    sleep(300, function(){
+                        adddiv_list(["Human", "Skeleton", "Zombie", "Dragon"]);
+                    });
+                }
+            } else if(player.race == undefined){
+                if(player.setRace(input)){
+                    addline();
+                    adddiv("You start your adventure as a " + 
+                    player.race.name + " " +
+                    player.job[0].name + ".");
+    
+                    player.hpnow = player.hp;
+                    player.mpnow = player.mp;
+                    showstats(player);
+                    generatemap();
+                    game_state = PLAY_NON_COMBAT;
+                }
             }
         } else if(game_state === PLAY_NON_COMBAT){
             input = input.toLowerCase();
@@ -166,7 +167,7 @@ function submit(){
                 game_state = COMBAT;
                 drawCombat();
             } else if(input === "room"){
-                let m = Map[player.x][player.y].monster;
+                let m = monsterAtPlayerRoom()();
                 var names = "";
                 for(let i = 0; i < m.length; i++){
                     names += m[i].name + " level " + m[i].level + "\n";
@@ -238,7 +239,7 @@ function exa(name){ //examine
  */
 function lookforobj(name){
     var i = 0;
-    var m = Map[player.x][player.y].monster;
+    var m = monsterAtPlayerRoom()();
     for(i = 0; i < m.length; i++){
         var monster = m[i];
         if(monster.name.toLowerCase() === name.toLowerCase()){

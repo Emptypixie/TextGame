@@ -191,3 +191,7 @@ function adddiv_list(arr){
         adddiv((i + 1) + ". " + arr[i]);
     }
 }
+
+function monsterAtPlayerRoom(){
+    return Map[player.x][player.y].monster;
+}

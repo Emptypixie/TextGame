@@ -58,7 +58,7 @@ class Creature extends ObjParent{
         /**Choose from jobs.js */
         this.job = [];
         /**creature race */
-        this.race = [];
+        this.race = undefined;
         /**active skill */
         this.skill = {};
         /**passive skill */
@@ -163,13 +163,13 @@ class Monster extends Creature{
         this.basexp 
         + (1 + 0.1425 * 
             Math.pow(this.level, 0.6 * 
-                Math.log10(this.Attack * 1.3 + 
-                    this.Defense * 1.2+ 
-                    this.Magic * 1.3 + 
-                    this.MagicDef * 1.2 + 
-                    this.Prayer * 1.2 + 
-                    this.Resistance * 1.2 + 
-                    this.HP)
+                Math.log10(this.attack * 1.3 + 
+                    this.defense * 1.2+ 
+                    this.magic * 1.3 + 
+                    this.magicdef * 1.2 + 
+                    this.prayer * 1.2 + 
+                    this.resistance * 1.2 + 
+                    this.hp + this.mp)
                 )
             )
         );
@@ -298,17 +298,22 @@ class Player extends Creature{
      * @returns {boolean} true if success, false if fail
      */
     setJob(jobname){
+        jobname = jobname.toLowerCase();
         switch (jobname){
             case 'warrior':
+            case '1':
                 this.job[0] = new jWarrior(player);
                 break;
             case 'mage':
+            case '2':
                 this.job[0] = new jMage(player);
                 break;
             case 'ranger':
+            case '3':
                 this.job[0] = new jRanger(player);
                 break;
             case 'priest':
+            case '4':
                 this.job[0] = new jPriest(player);
                 break;
         }
@@ -316,7 +321,8 @@ class Player extends Creature{
         if(this.job[0] != undefined){
             return true;//success
         } else {
-            console.log(jobname + ": no such job the list");
+            adddiv(jobname + ": no such job the list.");
+            console.log(jobname + ": no such job the list.");
             return false;//fail
         }
     }
@@ -326,29 +332,30 @@ class Player extends Creature{
      * @returns {boolean} true if success, false if fail
     */
     setRace(racename){
-        racename.toLowerCase;
+        racename = racename.toLowerCase();
         switch(racename){
             case 'human':
-            case 1:
-                this.race[0] = new rHuman(this);
+            case '1':
+                this.race = new rHuman(this);
                 break;
             case 'skeleton':
-            case 2:
-                this.race[0] = new rSkeleton(this);
+            case '2':
+                this.race = new rSkeleton(this);
                 break;
             case 'zombie':
-            case 3:
-                this.race[0] = new rZombie(this);
+            case '3':
+                this.race = new rZombie(this);
                 break;
             case 'dragon':
-            case 4:
-                this.race[0] = new rDragon(this);
+            case '4':
+                this.race = new rDragon(this);
                 break;
         }
-        if(this.race[0] != undefined){
+        if(this.race != undefined){
             return true;//success
         } else {
-            console.log(racename + ": no such race the list");
+            adddiv(racename + ": no such race the list.")
+            console.log(racename + ": no such race the list.");
             return false;//fail
         }
         

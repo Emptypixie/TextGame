@@ -6,7 +6,7 @@ var MAXBARLENGTH = 100;
  * @param {number} num use static variables like ATTACK, DEFNSE
  */
 function fight(num){
-    var m = Map[player.x][player.y].monster;
+    var m = monsterAtPlayerRoom();
     var i = getRand(0, m.length - 1);
     var opponent = m[i];
 
@@ -35,7 +35,7 @@ function fight(num){
  * @param {Creature} opponent the opponent creature
  */
 function defeatedOpponent(opponent){
-    var m = Map[player.x][player.y].monster;
+    var m = monsterAtPlayerRoom();
     adddiv("You defeated " + opponent.name + ".");
     adddiv_c("You gained " + opponent.xp + " xp.", "yellow");
     player.xp += opponent.xp;
@@ -98,7 +98,7 @@ function damageFunc(c_att, c_def){
  * @param {Creature} c_def the deffending Creature
  */
 function damageCalc(c_att, c_def){
-    var dmg = c_att.Attack * 10 + c_att.level;
+    var dmg = c_att.attack * 10 + c_att.level;
     var reduc = c_def.defense * 5 + c_def.level;
     dmg -= reduc;
     return dmg;
@@ -109,7 +109,7 @@ function damageCalc(c_att, c_def){
  * Also adds string "combat with monster1, monster2, .... bega." before #placeholder
  */
 function drawCombat(){
-    var m = Map[player.x][player.y].monster;
+    var m = monsterAtPlayerRoom();
     if(m.length != 0){
         var str = "Combat with ";
         for(let i = 0; i < m.length; i++){

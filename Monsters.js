@@ -17,7 +17,7 @@ class Goblin extends Monster{
     }
 
     setRace(){
-        this.race[0] = new rGoblin(this);
+        this.race = new rGoblin(this);
     }
 
     examine(){
@@ -44,7 +44,7 @@ class Zombie extends Monster{
     }
 
     setRace(){
-        this.race[0] = new rSkeleton(this);
+        this.race = new rSkeleton(this);
     }
 
     examine(){
@@ -71,7 +71,7 @@ class Dark_Warrior extends Monster{
     }
 
     setRace(){
-        this.race[0] = new rHuman(this);
+        this.race = new rHuman(this);
     }
 
     examine(){
@@ -93,7 +93,7 @@ class Dark_Priest extends Monster{
     }
 
     setRace(){
-        this.race[0] = new rHuman(this);
+        this.race = new rHuman(this);
     }
 
     setmaxminlv(){
@@ -120,7 +120,7 @@ class Black_Dragon extends Monster{
     }
 
     setRace(){
-        this.race[0] = new rDragon(this);
+        this.race = new rDragon(this);
     }
     
     setmaxminlv(){

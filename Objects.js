@@ -272,7 +272,7 @@ class Player extends Creature{
     
     /**reset player stats, job, race */
     init(){
-        this.level = 1;
+        this.level = 99;
         this.Attack = 1000;
         this.Defense = 100;
         this.Magic = 1;

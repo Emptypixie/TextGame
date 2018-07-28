@@ -51,8 +51,10 @@ function defeatedOpponent(opponent){
         }
     }
     {
-        if(player.level != 100)
-            adddiv((nextlvxp - player.xp) + " xp till next level.");
+        if(player.level != 100){
+            let str = separateNum(nextlvxp - player.xp);
+            adddiv(str + " xp till next level.");
+        }
     }
     var index = m.indexOf(opponent);//delete monster from current room
     m.splice(index, 1);

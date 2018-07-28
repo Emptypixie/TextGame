@@ -163,3 +163,16 @@ function sleep(waitSec, callbackFunc){
 function getInterval(str){
     return str.length / TYPINGSPEED + getRand(TYPEMINRAN, TYPEMAXRAN);
 }
+
+function separateNum(num){
+    var n = num;
+    var str = "";
+    for(let i = Math.floor((String(num).length - 1) / 3); i > 0; i--){
+        str += Math.floor(Number(num) / Math.pow(10, i * 3));
+        num -= Math.floor(Number(num) / Math.pow(10, i * 3)) *  Math.pow(10, i * 3);
+        str += ",";
+    }
+    str += num;
+
+    return str;
+}

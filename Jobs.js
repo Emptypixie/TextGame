@@ -68,7 +68,7 @@ class jWarrior extends Job{
     }
 
     addstat(){
-        this.creature.HP += 1;
+        this.creature.hp += 1;
     }
 } 
 
@@ -94,7 +94,7 @@ class jMage extends Job{
     }
 
     addstat(){
-        this.creature.HP += 1;
+        this.creature.hp += 1;
     }
 } 
 
@@ -120,7 +120,7 @@ class jRanger extends Job{
     }
 
     addstat(){
-        this.creature.HP += 1;
+        this.creature.hp += 1;
     }
 } 
 
@@ -146,7 +146,7 @@ class jPriest extends Job{
     }
 
     addstat(){
-        this.creature.HP += 1;
+        this.creature.hp += 1;
     }
 } 
 

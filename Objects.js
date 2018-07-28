@@ -82,25 +82,25 @@ class Creature extends ObjParent{
         /**the creature's level */
         this.level = l;
         /**Attack level */
-        this.Attack = l;
+        this.attack = l;
         /**Defense level */
-        this.Defense = l;
+        this.defense = l;
         /**Magic level */
-        this.Magic = l;
+        this.magic = l;
         /**Magic def */
-        this.MagicDef = l;
+        this.magicdef = l;
         /**Speed level */
-        this.Speed = l;
+        this.speed = l;
         /**HP level */
-        this.HP = l * 10;
+        this.hp = l * 10;
         /**MP level */
-        this.MP = l * 10;
+        this.mp = l * 10;
         /**Prayer level */
-        this.Prayer = l;
+        this.prayer = l;
         /**Resistance level */
-        this.Resistance = l;
-        this.hpnow = this.HP;
-        this.mpnow = this.MP;
+        this.resistance = l;
+        this.hpnow = this.hp;
+        this.mpnow = this.mp;
     }
 
     /**adjust monster level to set level */
@@ -273,17 +273,17 @@ class Player extends Creature{
     /**reset player stats, job, race */
     init(){
         this.level = 99;
-        this.Attack = 1000;
-        this.Defense = 100;
-        this.Magic = 1;
-        this.MagicDef = 1;
-        this.Speed = 1;
-        this.HP = 1000;
-        this.MP = 1;
-        this.Prayer = 1;
-        this.Resistance = 1;
-        this.hpnow = this.HP;
-        this.mpnow = this.MP;
+        this.attack = 1000;
+        this.defense = 100;
+        this.magic = 1;
+        this.magicdef = 1;
+        this.speed = 1;
+        this.hp = 1000;
+        this.mp = 1;
+        this.prayer = 1;
+        this.resistance = 1;
+        this.hpnow = this.hp;
+        this.mpnow = this.mp;
     }
 
     /**Overrides Creature setlevel */

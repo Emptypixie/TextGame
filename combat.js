@@ -99,7 +99,7 @@ function damageFunc(c_att, c_def){
  */
 function damageCalc(c_att, c_def){
     var dmg = c_att.Attack * 10 + c_att.level;
-    var reduc = c_def.Defense * 5 + c_def.level;
+    var reduc = c_def.defense * 5 + c_def.level;
     dmg -= reduc;
     return dmg;
 }

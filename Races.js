@@ -29,7 +29,7 @@ class rGoblin extends Race{
     }
 
     addstat(){
-        this.creature.HP += 1;
+        this.creature.hp += 1;
     }
 }
 
@@ -55,7 +55,7 @@ class rHuman extends Race{
     }
 
     addstat(){
-        this.creature.HP += 1;
+        this.creature.hp += 1;
     }
 }
 
@@ -81,7 +81,7 @@ class rSkeleton extends Race{
     }
 
     addstat(){
-        this.creature.HP += 1;
+        this.creature.hp += 1;
     }
 }
 
@@ -106,6 +106,6 @@ class rDragon extends Race{
     }
 
     addstat(){
-        this.creature.HP += 1;
+        this.creature.hp += 1;
     }
 }

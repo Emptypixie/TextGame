@@ -133,6 +133,7 @@ function submit(){
                 input = input.toLowerCase();
                 if(player.setJob(input)){
                     adddiv("You start your adventure as a " + player.job[0].name + ".");
+                    showstats(player);
                     generatemap();
                     game_state = PLAY_NON_COMBAT;
                 }
@@ -290,6 +291,21 @@ function showmap(){
         adddiv(str);
         str = "";
     }
+}
+
+function showstats(creature){
+    adddiv(creature.name + " stats:");
+    adddiv("Level: " + creature.level);
+    adddiv("HP: " + creature.hpnow + " / " + creature.hp);
+    adddiv("MP: " + creature.mpnow + " / " +creature.mp);
+    adddiv("Attack: " + creature.attack);
+    adddiv("Physical Defense: " + creature.defense);
+    adddiv("Magic Attack: " + creature.magic);
+    adddiv("Magic Defense: " + creature.magicdef);
+    adddiv("Speed: " + creature.speed);
+    adddiv("Prayer: " + creature.prayer);
+    adddiv("Resistance: " + creature.resistance);
+
 }
 
 

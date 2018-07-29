@@ -185,7 +185,7 @@ function submit(){
                     if(player.race.level < player.race.maxlevel){
                         adddiv(player.race.name);
                     }
-                    for(let i = 0; i < total; i++){
+                    for(let i = 0; i < player.job.length; i++){
                         if(player.job[i].level < player.job[i].maxlevel){
                             adddiv(player.job[i].name);
                         }
@@ -338,8 +338,14 @@ function showmap(){
  */
 function showstats(creature){
     adddiv(creature.name + " stats:");
-    adddiv("Race: " + toUpper(creature.race.name));
-    adddiv("Job: " + toUpper(arrayToCommaList(creature.job, true)));
+    adddiv(toUpper(creature.race.name) + " level " + creature.race.level);
+    for(let i = 0; i < creature.job.length; i++){
+        if(i == 0){
+            adddiv("Job: " + toUpper(creature.job[i].name) + " level " + creature.job[i].level);
+        } else {
+            adddiv(toUpper(creature.job) + " level " + creature.job[i].level);
+        }
+    }
     adddiv("Level: " + creature.level);
     adddiv("HP: " + creature.hpnow + " / " + creature.hp);
     adddiv("MP: " + creature.mpnow + " / " +creature.mp);

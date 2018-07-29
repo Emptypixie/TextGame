@@ -76,6 +76,7 @@ class rHuman extends Race{
     }
 
     levelup(){
+        this.level += 1;
         this.creature.hp += 10;
         this.creature.hpnow = this.creature.hp;
         this.creature.mp += 10;

@@ -163,10 +163,10 @@ class Monster extends Creature{
         this.xp = Math.ceil(
         this.basexp 
         + (1 + 0.1425 * 
-            Math.pow(this.level, 0.6 * 
-                Math.log10(this.attack * 1.3 + 
+            Math.pow(this.level + 1, 0.641917 * 
+                Math.log10(this.attack * 2 + 
                     this.defense * 1.2+ 
-                    this.magic * 1.3 + 
+                    this.magic * 2 + 
                     this.magicdef * 1.2 + 
                     this.prayer * 1.2 + 
                     this.resistance * 1.2 + 
@@ -266,6 +266,8 @@ class Player extends Creature{
 
     constructor(name){
         super(name);
+        this.weapon = new SteelSword();
+        this.armour = new SteelPlateBody();
         this.desc = "The Main Player.";
         this.x = Math.floor(Map_Size / 2);
         this.y = this.x;
@@ -329,6 +331,7 @@ class Player extends Creature{
 
         if(this.job[0] != undefined){
             this.job[0].levelup();
+            this.job[0].level -= 1;
             this.level += 1;
             return true;//success
         } else {
@@ -364,6 +367,7 @@ class Player extends Creature{
         }
         if(this.race != undefined){
             this.race.levelup();
+            this.race.level -= 1;
             this.level += 1;
             return true;//success
         } else {

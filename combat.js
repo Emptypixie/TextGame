@@ -184,14 +184,15 @@ function getParryrate(dspd, ddef, aspd, aatt){
  * @param {Creature} c_def the deffending Creature
  */
 function damageCalc(c_att, c_def){
-    var dmg = c_att.attack * 10;
-    var reduc = c_def.defense * 5 ;
+    var dmg = c_att.attack * 1;
+    var reduc = c_def.defense;
     if(c_att == player)
         dmg += player.weapon.attack + player.armour.attack;
     if(c_def == player){
         reduc += player.weapon.defense + player.armour.defense;
     }
     dmg -= reduc;
+    if(dmg < 0){getRand(1,5);}
     return dmg;
 }
 

@@ -68,7 +68,7 @@ function levelUp(){
     let nextlvxp = getxpforlv(player.level + 1);
     while(player.xp > nextlvxp){
         if(player.level != 100){
-                player.level += 1;
+                player.levelup();
                 adddiv_c("You leveled up! You are now level " + player.level + ".", "lime");
                 nextlvxp = getxpforlv(player.level + 1);
         } else {
@@ -150,8 +150,8 @@ function damageFunc(c_att, c_def, p_action){
         dmg = Math.floor(dmg)
         c_def.hpnow -= dmg;
         adddiv(c_att.name + " deals " + dmg +" damage to " + c_def.name + ".");
-        redrawlife(c_def, dmg);
-        redrawmp(c_def, 0);//put used mp value in second argument
+        redrawlife(c_def);
+        redrawmp(c_def);//put used mp value in second argument
     }
     
 }
@@ -234,7 +234,7 @@ function draw_name_hp_mp(creature){
  * Redraws the hp bar of creature.
  * @param {Creature} creature 
  */
-function redrawlife(creature, dmg){
+function redrawlife(creature){
     var id = "#" + creature.id + "hp";
     var element = $(id);
     var hprate = Math.ceil(creature.hpnow / creature.hp * MAXBARLENGTH);
@@ -252,7 +252,7 @@ function redrawlife(creature, dmg){
  * Redraws the mp bar of crearture.
  * @param {Creature} creature 
  */
-function redrawmp(creature, mpused){
+function redrawmp(creature){
     var id = "#" + creature.id + "mp";
     var element = $(id);
     var mprate = Math.ceil(creature.mpnow / creature.mp * MAXBARLENGTH);

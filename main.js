@@ -33,6 +33,7 @@ var STARTPAGE = 0;
 var SETUP = 1;
 var PLAY_NON_COMBAT = 2;
 var COMBAT = 3;
+var LEVELUP = 4;
 
 /**
  * State of the game.
@@ -174,8 +175,41 @@ function submit(){
                 addp(names);
             } else if(input == 'stat' || input == 'stats'){
                 showstats(player);
+            } else if(input == 'level up' || input =='l'){
+                let total = 0;
+                for(let i = 0; i < player.job.length; i++){
+                    total += player.job[i].level;
+                }
+                if(player.level > player.race.level + total){
+                    adddiv("Choose Race / Job to level up.");
+                    if(player.race.level < player.race.maxlevel){
+                        adddiv(player.race.name);
+                    }
+                    for(let i = 0; i < total; i++){
+                        if(player.job[i].level < player.job[i].maxlevel){
+                            adddiv(player.job[i].name);
+                        }
+                    }
+                    game_state = LEVELUP;
+                }
             }
-        } else if(game_state === COMBAT){
+        } else if(game_state === LEVELUP){
+            input = input.toLowerCase();
+            if(player.race.level < player.race.maxlevel && input === player.race.name){
+                player.race.levelup();
+                adddiv(toUpper(player.race.name) + " is now level " + player.race.level);
+                game_state = PLAY_NON_COMBAT;
+            } else {
+                for(let i = 0; i < player.job.length; i++){
+                    if(player.job[i].name === input && player.job[i].level < player.job[i].maxlevel){
+                        player.job[i].levelup();
+                        adddiv(toUpper(player.job[0].name) + " is now level " + player.job[0].level);
+                        game_state = PLAY_NON_COMBAT;
+                        break;
+                    }
+                }
+            }
+        }else if(game_state === COMBAT){
             input = input.toLowerCase();
             if(input === "attack" || input === "a"){
                 fight(ATTACK);
@@ -253,11 +287,7 @@ function lookforobj(name){
  * @param {String} name 
  */
 function setupplayer(name){
-    player = new Player(name);//must be before generating map    
-    player.desc = "The Main Player.";
-    player.x = Math.floor(Map_Size / 2);
-    player.y = player.x;
-    player.init();
+    player = new Player(name);//must be before generating map
 }
 
 

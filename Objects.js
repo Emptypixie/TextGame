@@ -124,6 +124,7 @@ class Creature extends ObjParent{
     setRace(){
         throw new Error("Set job of " + this.name + "!");
     }
+
 };
 
 
@@ -262,6 +263,14 @@ class Room extends ObjParent{
 
 /**The Player class */
 class Player extends Creature{
+
+    constructor(name){
+        super(name);
+        this.desc = "The Main Player.";
+        this.x = Math.floor(Map_Size / 2);
+        this.y = this.x;
+        this.init();
+    }
     /**
      * 
      * @param {Item} obj object to add into inv
@@ -273,16 +282,16 @@ class Player extends Creature{
     
     /**reset player stats, job, race */
     init(){
-        this.level = 99;
-        this.attack = 1000;
-        this.defense = 100;
-        this.magic = 1;
-        this.magicdef = 1;
-        this.speed = 1;
-        this.hp = 1000;
-        this.mp = 1;
-        this.prayer = 1;
-        this.resistance = 1;
+        this.level = 0;
+        this.attack = 0;
+        this.defense = 0;
+        this.magic = 0;
+        this.magicdef = 0;
+        this.speed = 0;
+        this.hp = 0;
+        this.mp = 0;
+        this.prayer = 0;
+        this.resistance = 0;
         this.hpnow = this.hp;
         this.mpnow = this.mp;
     }
@@ -319,6 +328,8 @@ class Player extends Creature{
         }
 
         if(this.job[0] != undefined){
+            this.job[0].levelup();
+            this.level += 1;
             return true;//success
         } else {
             adddiv(jobname + ": no such job the list.");
@@ -352,13 +363,29 @@ class Player extends Creature{
                 break;
         }
         if(this.race != undefined){
+            this.race.levelup();
+            this.level += 1;
             return true;//success
         } else {
             adddiv(racename + ": no such race the list.")
             console.log(racename + ": no such race the list.");
             return false;//fail
         }
-        
+    }
+
+    levelup(){
+        player.level += 1;
+        this.attack += 1;
+        this.defense += 1;
+        this.magic += 1;
+        this.magicdef += 1;
+        this.speed += 1;
+        this.hp += 10;
+        this.mp += 10;
+        this.prayer += 1;
+        this.resistance += 1;
+        this.hpnow = this.hp;
+        this.mpnow = this.mp;
     }
 };
 

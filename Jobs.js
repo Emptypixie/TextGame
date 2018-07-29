@@ -33,6 +33,7 @@ class Job{
     addspell(){
         alert("add spell! ( " + (typeof this) + " )");
     }
+    
 
     /**Add stat(s) to creatrue. Called in constructor */ 
     addstat(){
@@ -64,6 +65,22 @@ class jWarrior extends Job{
     addstat(){
         this.creature.hp += 1;
     }
+
+    levelup(){
+        this.level += 1;
+        
+        this.creature.hp += 20;
+        this.creature.hpnow = this.creature.hp;
+        this.creature.mp += 5;
+        this.creature.hpnow = this.creature.mp;
+        this.creature.magic += 0;
+        this.creature.magicdef += 1;
+        this.creature.attack += 10;
+        this.creature.defense += 5;
+        this.creature.speed += 3;
+        this.creature.prayer += 0;
+        this.creature.resistance += 5;
+    }
 } 
 
 class jMage extends Job{
@@ -89,6 +106,22 @@ class jMage extends Job{
 
     addstat(){
         this.creature.hp += 1;
+    }
+
+    levelup(){
+        this.level += 1;
+        
+        this.creature.hp += 5;
+        this.creature.hpnow = this.creature.hp;
+        this.creature.mp += 20;
+        this.creature.hpnow = this.creature.mp;
+        this.creature.magic += 10;
+        this.creature.magicdef += 5;
+        this.creature.attack += 1;
+        this.creature.defense += 1;
+        this.creature.speed += 3;
+        this.creature.prayer += 0;
+        this.creature.resistance += 5;
     }
 } 
 
@@ -116,6 +149,22 @@ class jRanger extends Job{
     addstat(){
         this.creature.hp += 1;
     }
+
+    levelup(){
+        this.level += 1;
+        
+        this.creature.hp += 10;
+        this.creature.hpnow = this.creature.hp;
+        this.creature.mp += 8;
+        this.creature.hpnow = this.creature.mp;
+        this.creature.magic += 1;
+        this.creature.magicdef += 1;
+        this.creature.attack += 4;
+        this.creature.defense += 3;
+        this.creature.speed += 6;
+        this.creature.prayer += 0;
+        this.creature.resistance += 4;
+    }
 } 
 
 class jPriest extends Job{
@@ -141,6 +190,22 @@ class jPriest extends Job{
 
     addstat(){
         this.creature.hp += 1;
+    }
+
+    levelup(){
+        this.level += 1;
+        
+        this.creature.hp += 10;
+        this.creature.hpnow = this.creature.hp;
+        this.creature.mp += 10;
+        this.creature.hpnow = this.creature.mp;
+        this.creature.magic += 5;
+        this.creature.magicdef += 3;
+        this.creature.attack += 3;
+        this.creature.defense += 3;
+        this.creature.speed += 2;
+        this.creature.prayer += 10;
+        this.creature.resistance += 5;
     }
 } 
 

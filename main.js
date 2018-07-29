@@ -172,6 +172,7 @@ function submit(){
                 for(let i = 0; i < m.length; i++){
                     names += m[i].name + " level " + m[i].level + "\n";
                 }
+                if(names == ''){names = "No monster in room.";}
                 addp(names);
             } else if(input == 'stat' || input == 'stats'){
                 showstats(player);
@@ -255,12 +256,17 @@ function aftersubmit(){
  */
 function exa(name){ //examine
     var i = 0;
-    var obj = lookforobj(name);
-    if(obj != undefined){
-        adddiv(name + ": " + obj.examine());
+    if(name == "self" || name == "me" || name == player.name){
+        showstats();
     } else {
-        adddiv("'" + name + "' was not found");
-    } 
+        var obj = lookforobj(name);
+        if(obj != undefined){
+            adddiv(name + ": " + obj.examine());
+        } else {
+            adddiv("'" + name + "' was not found");
+        } 
+    }
+    
 }
 
 /**
@@ -337,8 +343,10 @@ function showmap(){
  * @param {Creature} creature 
  */
 function showstats(creature){
+    let nextlvxp = getxpforlv(player.level + 1);
+
     adddiv(creature.name + " stats:");
-    adddiv(toUpper(creature.race.name) + " level " + creature.race.level);
+    adddiv('Race: ' + toUpper(creature.race.name) + " level " + creature.race.level);
     for(let i = 0; i < creature.job.length; i++){
         if(i == 0){
             adddiv("Job: " + toUpper(creature.job[i].name) + " level " + creature.job[i].level);
@@ -346,7 +354,8 @@ function showstats(creature){
             adddiv(toUpper(creature.job) + " level " + creature.job[i].level);
         }
     }
-    adddiv("Level: " + creature.level);
+    adddiv("Level: " + creature.level + ' (' + 
+    separateNum(nextlvxp - player.xp) +' xp for next level.)');
     adddiv("HP: " + creature.hpnow + " / " + creature.hp);
     adddiv("MP: " + creature.mpnow + " / " +creature.mp);
     adddiv("Attack: " + creature.attack);

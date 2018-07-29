@@ -231,7 +231,9 @@ function arrayToCommaList(ar, b){
             str += ", ";
         }
     }
-
+    if(str.length == 0){
+        str = 'None';
+    }
     return str;
 }
 

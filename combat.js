@@ -39,7 +39,9 @@ function defeatedOpponent(opponent){
     adddiv("You defeated " + opponent.name + ".");
 
     playerGainXp(opponent.xp);
-
+    setInterval(function(){
+        Map[player.x][player.y].setMonster();
+    }, 1000 * 60);
     var index = m.indexOf(opponent);//delete monster from current room
     m.splice(index, 1);
 }

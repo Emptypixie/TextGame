@@ -114,6 +114,7 @@ class Black_Dragon extends Monster{
             super(name);
         }
         this.basexp = 1000;
+        this.speed += 1000;
     }
     setJob(){
         this.job = [];

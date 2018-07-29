@@ -3,14 +3,14 @@ var MAXBARLENGTH = 100;
 
 /**
  * fight according to style
- * @param {number} num use static variables like ATTACK, DEFNSE
+ * @param {number} p_action use static variables like ATTACK, DEFNSE
  */
-function fight(num){
+function fight(p_action){
     var m = monsterAtPlayerRoom();
     var i = getRand(0, m.length - 1);
     var opponent = m[i];
 
-    damageFunc(player, opponent);//player attacks opponent
+    damageFunc(player, opponent, p_action);//player attacks opponent
 
     sleep(500, function(){
         if(opponent.hpnow <= 0){//check if opponent hp is 0
@@ -21,7 +21,7 @@ function fight(num){
             game_state = PLAY_NON_COMBAT;
         } else {
             for(let i = 0; i < m.length; i++){
-                damageFunc(m[i], player);
+                damageFunc(m[i], player, p_action);
                 if(player.hpnow <= 0){//player dead!
                     playerDefeated(m[i]);
                 }
@@ -104,7 +104,83 @@ function playerDefeated(monster){
  * @param {Creature} c_att attacking creature
  * @param {Creature} c_def defending creature
  */
-function damageFunc(c_att, c_def){
+function damageFunc(c_att, c_def, p_action){
+    var blockrate, parryrate, evaderate, hiderate;
+    var dmg = damageCalc(c_att, c_def);//damage c_def deals to c_att
+    var ran = getRand(0, 9999) / 10000; //0.0000 ~ 0.9999
+    
+    if(p_action == SKILLSPELL && c_att == player){
+        //use skill
+        console.log("player use skill");
+    }
+
+    if(p_action == RUNAWAY && c_def == player){
+        hiderate = ((c_def.speed - c_att.speed) + (c_def.hpnow - c_att.hpnow) / 2) / 300 + 0.1;
+        if(hiderate > ran){
+            adddiv("You ran away.");
+            game_state = PLAY_NON_COMBAT;
+        } else {
+            adddiv("You fail to ran away.");
+        }
+    }
+    
+    //evade, block, parry rate calculations.
+    //evade: dmg = 0; block: dmg *= (1 - blockrate); parry: while(parryrate > ran){dmg*=parryrate; ran = getRand(0,4999)/5000;}
+    
+    if(game_state == COMBAT){
+        evaderate = (c_def.speed * 0.99 - c_att.speed * 1.1) * 0.9 / 100;
+        blockrate = (c_def.defense - c_att.attack) / 200;
+        parryrate = getParryrate(c_def.speed, c_def.defense, c_att.speed, c_att.attack);
+        if(evaderate > ran){
+            dmg = 0;
+            adddiv(c_def.name + " evaded " + c_att.name + "'s attack.");
+        } else if(blockrate > ran){
+            if(blockrate > 0.9) {blockrate == 0.9;}
+            dmg *= (1 - blockrate);//damage c_def deals to c_att
+            adddiv(c_def.name + " blocked " + c_att.name + "'s attack.");
+        } else if(parryrate > ran){
+            while(parryrate > ran){
+                dmg *= parryrate;
+                ran = getRand(0, 4999) / 5000;
+            }
+            adddiv(c_def.name + " parried " + c_att.name + "'s attack.");
+        }
+        
+        if(dmg < 0) {dmg = 0;}
+        dmg = Math.floor(dmg)
+        c_def.hpnow -= dmg;
+        adddiv(c_att.name + " deals " + dmg +" damage to " + c_def.name + ".");
+        redrawlife(c_def, dmg);
+        redrawmp(c_def, 0);//put used mp value in second argument
+    }
+    
+}
+
+/**
+ * Calculate parry rate (0 ~ 1)
+ * @param {number} dspd defending creature.speed
+ * @param {number} ddef defending creature.def
+ * @param {number} aspd attacking creature.speed
+ * @param {number} aatt attacking creature.atk
+ */
+function getParryrate(dspd, ddef, aspd, aatt){
+    var a, b, c;
+    b = Math.abs((4 * dspd - 3 * ddef) / (dspd + ddef));
+    a = 10 - b;
+    c = ((dspd - aspd) * a + (ddef - aatt) * b) / 2000;
+    if(c <= 0){
+        return 0.1;
+    } else {
+        return c + 0.1;
+    }
+}
+
+/**
+ * 
+ * @param {Creature} c_att attacking creature
+ * @param {Creature} c_def defending creature
+ */
+function atkFunct(c_att, c_def){
     var dmg = damageCalc(c_att, c_def);//damage player deals to opponent
     if(dmg < 0) {dmg = 0;}
     c_def.hpnow -= dmg;

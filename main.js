@@ -11,11 +11,8 @@ var count = 0;
 var Map_Size = 50;
 
 var ATTACK = 0;
-var BLOCK = 1;
-var PARRY = 2;
-var EVADE = 3;
-var SKILLSPELL = 4;
-var RUNAWAY = 5;
+var SKILLSPELL = 1;
+var RUNAWAY = 2;
 
 var TYPINGSPEED = 10;
 var TYPEMINRAN = 1;
@@ -43,7 +40,7 @@ var COMBAT = 3;
 var game_state = STARTPAGE;
 
 /**the player object */
-var player;
+var player = new Player("Player name");
 
 var LOADED = false;
 /**
@@ -182,15 +179,9 @@ function submit(){
             input = input.toLowerCase();
             if(input === "attack" || input === "a"){
                 fight(ATTACK);
-            } else if(input === "block" || input === "b"){
-                fight(BLOCK);
-            } else if(input === "parry" || input === "p"){
-                fight(PARRY);
-            } else if(input === "evade" || input === "e"){
-                fight(EVADE);
             } else if(input === "skill" || input === "spell" || input === "s"){
                 fight(SKILLSPELL);
-            } else if(input === "run away" || input === "r"){
+            } else if(input === "run" || input === "r"){
                 fight(RUNAWAY);
             }
         }

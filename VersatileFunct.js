@@ -86,10 +86,6 @@ function typeWriter(ele, str, i){
     if(i < str.length){
         ele.text(ele.text() + str.charAt(i));
         i++;
-        /*if(i < str.length){
-            ele.text(ele.text() + str.charAt(i));
-            i++;
-        } */
         return window.setTimeout(typeWriter, interval, ele, str, i);
     } else {
         //scrollBottomConsole();

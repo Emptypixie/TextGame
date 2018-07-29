@@ -175,19 +175,6 @@ function getParryrate(dspd, ddef, aspd, aatt){
     }
 }
 
-/**
- * 
- * @param {Creature} c_att attacking creature
- * @param {Creature} c_def defending creature
- */
-function atkFunct(c_att, c_def){
-    var dmg = damageCalc(c_att, c_def);//damage player deals to opponent
-    if(dmg < 0) {dmg = 0;}
-    c_def.hpnow -= dmg;
-    adddiv(c_att.name + " deals " + dmg +" damage to " + c_def.name + ".");
-    redrawlife(c_def, dmg);
-    redrawmp(c_def, 0);//put used mp value in second argument
-}
 
 /**
  * Calculates damage the offending creature deals to defending creature.
@@ -206,6 +193,7 @@ function damageCalc(c_att, c_def){
  * Also adds string "combat with monster1, monster2, .... bega." before #placeholder
  */
 function drawCombat(){
+    $("#combat_area").empty();
     var m = monsterAtPlayerRoom();
     if(m.length != 0){
         var str = "Combat with ";
@@ -234,7 +222,7 @@ function drawCombat(){
  */
 function draw_name_hp_mp(creature){
     var ele = $('<div>').css({"text-align": "center"});
-    ele.attr("id",creature.id);
+    ele.attr("id", creature.id);
     $("#combat_area").append(ele);
     drawname(creature);
     drawnewlife(creature);
@@ -249,20 +237,15 @@ function draw_name_hp_mp(creature){
 function redrawlife(creature, dmg){
     var id = "#" + creature.id + "hp";
     var element = $(id);
-    while(true){
-        let len = element.text().length;
-        if(len == 0) { //element not found
-            break;
-        } else if(len < dmg){ // dmg bigger than hp bar
-            element.remove();
-            dmg -= len;
-            element = $(id);
-        } else { // hp bar len > dmg
-            element.text(numtoline(len - dmg));
-            break;
-        }
-    } return true;
-    
+    var hprate = Math.ceil(creature.hpnow / creature.hp * MAXBARLENGTH);
+    if(hprate < 0){hprate = 0;}
+    let strred = numtoline(hprate);
+    let strgray = numtoline(MAXBARLENGTH - hprate);
+    element.html("<span id='" + creature.id + "hp0" + "' style='color: #ff0000'>" +
+    strred + "</span><span id='" + creature.id + "hp1" + "' style='color: #29293d'>" + strgray + "</span>");
+//29293d
+
+    return true;
 }
 
 /**
@@ -272,19 +255,13 @@ function redrawlife(creature, dmg){
 function redrawmp(creature, mpused){
     var id = "#" + creature.id + "mp";
     var element = $(id);
-    while(true){
-        let len = element.text().length;
-        if(len == 0) { //element not found
-            break;
-        } else if(len < mpused){ // mpused bigger than one mp bar
-            element.remove();
-            mpused -= len;
-            element = $(id);
-        } else { // mp bar len > mpused
-            element.text(numtoline(len - mpused));
-            break;
-        }
-    } return true;
+    var mprate = Math.ceil(creature.mpnow / creature.mp * MAXBARLENGTH);
+    if(mprate < 0){mprate = 0;}
+    let strred = numtoline(mprate);
+    let strgray = numtoline(MAXBARLENGTH - mprate);
+    element.html("<span id='" + creature.id + "mp0" + "' style='color: #0000ff'>" +
+    strred + "</span><span id='" + creature.id + "mp1" + "' color='#00004d'>" + strgray + "</span>");
+    return true;
 }
 
 /**
@@ -292,40 +269,32 @@ function redrawmp(creature, mpused){
  * @param {Creature} creature 
  */
 function drawnewlife(creature){
-    var hp = creature.hpnow;
-    while(hp > MAXBARLENGTH){
-        let str = numtoline(MAXBARLENGTH);
-        let ele = $('<div>').css({"text-align": "center", "color": "red"});
-        ele.attr("id", creature.id + "hp");
-        $("#combat_area").append(ele);
-        typeWriter(ele, str, 0);
-        hp -= MAXBARLENGTH;
-    }
-    let str = numtoline(hp);
-    let ele = $('<div>').css({"text-align": "center", "color": "red"});
+    var hprate = Math.ceil(creature.hpnow / creature.hp * MAXBARLENGTH);
+    
+    let ele = $('<div>').css({"text-align": "center"});
     ele.attr("id", creature.id + "hp");
     $("#combat_area").append(ele);
-    typeWriter(ele, str, 0);
+
+    let strred = numtoline(hprate);
+    let strgray = numtoline(MAXBARLENGTH - hprate);
+    ele.html("<span id='" + creature.id + "hp0" + "' style='color: #ff0000'>" +
+     strred + "</span><span id='" + creature.id + "hp1" + "' style='color: #29293d'>" + strgray + "</span>");
 }
 /**
  * Draws new MP bar in combat_area.
  * @param {Creature} creature 
  */
 function drawnewmp(creature){
-    var mp = creature.mpnow;
-    while(mp > MAXBARLENGTH){
-        let str = numtoline(MAXBARLENGTH);
-        let ele = $('<div>').css({"text-align": "center", "color": "blue"});
-        ele.attr("id", creature.id + "mp");
-        $("#combat_area").append(ele);
-        typeWriter(ele, str, 0);
-        mp -= MAXBARLENGTH;
-    }
-    let str = numtoline(mp);
-    let ele = $('<div>').css({"text-align": "center", "color": "blue"});
+    var mprate = Math.ceil(creature.mpnow / creature.mp * MAXBARLENGTH);
+    
+    let ele = $('<div>').css({"text-align": "center"});
     ele.attr("id", creature.id + "mp");
     $("#combat_area").append(ele);
-    return typeWriter(ele, str, 0);
+
+    let strred = numtoline(mprate);
+    let strgray = numtoline(MAXBARLENGTH - mprate);
+    ele.html("<span id='" + creature.id + "mp0" + "' style='color: #0000ff'>" +
+     strred + "</span><span id='" + creature.id + "mp1" + "' color='#00004d'>" + strgray + "</span>");
 }
 
 /**
@@ -369,20 +338,22 @@ function numtoline(num){
 function removeCombat(){
     var ch1 = $("#combat_area > div"); //array of div with creature id
     for(let i = 0; i < ch1.length; i++){
-            var ele = $("#" + ch1[i].id);
-            ele.attr('id', "#" + ch1[i].id + i);
-            removeCombatElement(ele, ele.text().length);
-            /*if(ele.length == 1){
-                removeCombatElement(ele, ele.text().length);
-            } else {
-                ele.forEach(function(e){
-                    removeCombatElement(e, e.text().length);
-                });
-            } */
+        let ele = $("#" + ch1[i].id + "> span");
+        if(ele.length == 2){//if it is a hp/mp bar
+            let ele0 = $("#" + ch1[i].id + "0");
+            let ele1 = $("#" + ch1[i].id + "1");
+            ele0.attr('id', "#" + ch1[i].id + i);
+            ele1.attr('id', "#" + ch1[i].id + i);
+            removeCombatElement(ele0, ele0.text().length);
+            removeCombatElement(ele1, ele1.text().length);
+        } else {
+            let ele0 = $("#" + ch1[i].id);
+            ele0.attr('id', "#" + ch1[i].id + i);
+            removeCombatElement(ele0, ele0.text().length);
+        }
+            
     }
     removeCombatElement($("#vs"), $("#vs").text().length);
-    
-    //$("#combat_area").empty();
 }
 
 /**
